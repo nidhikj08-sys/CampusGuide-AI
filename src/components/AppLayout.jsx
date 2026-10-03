@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import InstallPwaPrompt from "./InstallPwaPrompt";
 
 export default function AppLayout({ children, title, subtitle }) {
   const { profile, logout } = useAuth();
@@ -109,6 +110,7 @@ export default function AppLayout({ children, title, subtitle }) {
         </nav>
 
         <div className="sidebar-footer">
+          <InstallPwaPrompt />
           <button className="sidebar-logout-btn" onClick={logout}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
