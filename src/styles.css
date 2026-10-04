@@ -859,6 +859,45 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   to { transform: rotate(360deg); }
 }
 
+.success-state {
+  text-align: center;
+  padding: 24px 0;
+}
+
+.success-state h1 {
+  margin: 16px 0 8px;
+  font-size: 1.5rem;
+  color: #0f172a;
+}
+
+.success-state .muted {
+  margin: 0;
+}
+
+.success-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.success-actions .btn {
+  flex: 1;
+  max-width: 160px;
+}
+
+.verify-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.verify-actions .btn {
+  flex: 1;
+  max-width: 160px;
+}
+
 .empty-icon {
   font-size: 3rem;
   margin-bottom: 12px;
@@ -1144,6 +1183,111 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   margin-top: 20px;
 }
 
+/* ============================================================
+   LOGIN ENHANCEMENTS: Remember me, Forgot password, Social login
+   ============================================================ */
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: #334155;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.forgot-link {
+  font-size: 0.85rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 20px 0;
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.divider span {
+  white-space: nowrap;
+}
+
+.social-login {
+  display: flex;
+  gap: 10px;
+}
+
+.social-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.social-btn:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #94a3b8;
+}
+
+.social-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.social-btn.google:hover:not(:disabled) {
+  border-color: #4285F4;
+  color: #4285F4;
+}
+
+.social-btn.microsoft:hover:not(:disabled) {
+  border-color: #0078D4;
+  color: #0078D4;
+}
+
 @media (max-width: 768px) {
   .login-container {
     flex-direction: column;
@@ -1153,6 +1297,170 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   }
   .login-right-panel {
     padding: 32px 24px;
+  }
+  .social-login {
+    flex-direction: column;
+  }
+}
+
+/* ============================================================
+   SIGNUP PAGE ENHANCEMENTS
+   ============================================================ */
+.signup-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 24px;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e2e8f0;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.progress-step.active .step-number {
+  background: #2563eb;
+  color: #fff;
+}
+
+.step-label {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.progress-step.active .step-label {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.progress-line {
+  width: 60px;
+  height: 3px;
+  background: #e2e8f0;
+  border-radius: 2px;
+}
+
+.password-strength {
+  margin-top: 8px;
+}
+
+.strength-bar {
+  height: 4px;
+  background: #e2e8f0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.strength-info {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 0.7rem;
+}
+
+.strength-label {
+  font-weight: 600;
+}
+
+.strength-hint {
+  color: #94a3b8;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.form-actions .btn {
+  flex: 1;
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.alert-info {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #2563eb;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .signup-progress {
+    gap: 0;
+  }
+  
+  .progress-line {
+    width: 40px;
   }
 }
 
@@ -1876,4 +2184,504 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
     padding-bottom: 84px !important;
   }
 }
+
+/* ============================================================
+   PROFILE PAGE – DIGITAL ID CARD & ENHANCED LAYOUT
+   ============================================================ */
+
+.profile-page-root {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Tab Bar */
+.profile-tabs-bar {
+  display: flex;
+  gap: 4px;
+  background: #e9eef5;
+  border-radius: 14px;
+  padding: 5px;
+  margin-bottom: 18px;
+}
+
+.profile-tab-btn {
+  flex: 1;
+  padding: 10px 6px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.profile-tab-btn.active {
+  background: #fff;
+  color: #2563eb;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+}
+
+.profile-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ─── DIGITAL ID CARD ─── */
+.digital-id-card {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(15, 28, 50, 0.18);
+  background: #fff;
+}
+
+.id-card-header {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #4f46e5 100%);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+}
+
+.id-header-college {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.id-college-icon {
+  font-size: 1.6rem;
+}
+
+.id-college-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.id-college-sub {
+  font-size: 0.72rem;
+  opacity: 0.8;
+}
+
+.id-app-brand {
+  font-size: 0.78rem;
+  font-weight: 700;
+  opacity: 0.85;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 4px 10px;
+}
+
+.id-card-body {
+  display: flex;
+  gap: 12px;
+  padding: 18px;
+  background: linear-gradient(170deg, #f0f4ff 0%, #fff 70%);
+}
+
+.id-card-left {
+  flex: 1;
+  display: flex;
+  gap: 14px;
+}
+
+/* Photo Wrapper */
+.id-photo-wrapper {
+  position: relative;
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid #2563eb;
+  background: linear-gradient(135deg, #3b6cf6, #6b46f6);
+  overflow: visible;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.id-photo-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.id-photo-initials {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.id-photo-edit-btn {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 2px solid #fff;
+  color: #fff;
+  font-size: 0.7rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.2s;
+}
+
+.id-photo-edit-btn:hover {
+  background: #1d4ed8;
+}
+
+/* Identity column */
+.id-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.id-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.id-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #dcfce7;
+  color: #15803d;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  width: fit-content;
+}
+
+.id-meta-row {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 0.8rem;
+}
+
+.id-meta-label {
+  color: #64748b;
+  min-width: 65px;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+}
+
+.id-meta-val {
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+/* QR Section */
+.id-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.id-qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.id-qr-title {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #1e40af;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+
+.id-qr-box {
+  background: #1e3a8a;
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);
+}
+
+.id-qr-label {
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.75);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.id-blood-badge {
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+/* Footer stripe */
+.id-card-footer {
+  background: linear-gradient(90deg, #1e3a8a, #4f46e5);
+  color: rgba(255,255,255,0.75);
+  font-size: 0.7rem;
+  padding: 7px 16px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ID Card Action Buttons */
+.id-card-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.id-card-actions .btn-sm {
+  margin-top: 0;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+}
+
+/* Info Cards Grid */
+.id-info-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.id-info-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 2px 10px rgba(20, 30, 60, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.id-info-card-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.id-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.83rem;
+  color: #475569;
+}
+
+.id-info-row b {
+  color: #0f172a;
+  font-weight: 700;
+  text-align: right;
+}
+
+.id-room-card {
+  border-top: 3px solid #2563eb;
+}
+
+.id-room-display {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  padding: 4px 0;
+}
+
+.id-emergency-card {
+  border-top: 3px solid #dc2626;
+  grid-column: 1 / -1;
+}
+
+.blood-tag {
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 0.82rem;
+}
+
+/* ─── DETAILS TAB ─── */
+.profile-detail-card {
+  width: 100%;
+}
+
+.profile-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.profile-mini-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.profile-mini-img {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.profile-detail-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.profile-detail-role {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* ─── ACCOUNT TAB ─── */
+.account-section {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.account-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.account-section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.account-photo-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.account-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 3px solid #e2e8f0;
+}
+
+.account-avatar-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* ─── HEADER AVATAR WITH PHOTO ─── */
+.admin-avatar-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .id-card-body {
+    flex-direction: column;
+  }
+  .id-card-left {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .id-identity {
+    align-items: center;
+  }
+  .id-meta-row {
+    justify-content: center;
+  }
+  .id-card-right {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .id-info-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .id-emergency-card {
+    grid-column: auto;
+  }
+  .profile-tabs-bar {
+    font-size: 0.75rem;
+  }
+  .profile-tab-btn {
+    font-size: 0.75rem;
+    padding: 8px 4px;
+  }
+}
+
 

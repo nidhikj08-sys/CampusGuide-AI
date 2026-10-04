@@ -2,6 +2,10 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import VerifyEmail from "./pages/VerifyEmail";
+import AuthCallback from "./pages/AuthCallback";
 import StudentDashboard from "./pages/StudentDashboard";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -14,9 +18,13 @@ import Profile from "./pages/Profile";
 export default function App() {
   return (
     <Routes>
-      {/* 1. Login Page (Screen 1) */}
+      {/* Auth routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
 
       {/* 2 & 3 & 4. Student Flow (Screens 2, 3, 4) */}
       <Route path="/student" element={<ProtectedRoute allow={["student"]}><StudentDashboard /></ProtectedRoute>} />

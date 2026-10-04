@@ -147,7 +147,10 @@ export default function AppLayout({ children, title, subtitle }) {
           <div className="header-right">
             <Link to="/profile" className="admin-user-pill">
               <div className="admin-avatar">
-                {displayName.charAt(0).toUpperCase()}
+                {profile?.avatar_url
+                  ? <img src={profile.avatar_url} alt="avatar" className="admin-avatar-photo" />
+                  : displayName.charAt(0).toUpperCase()
+                }
               </div>
               <div className="admin-user-info">
                 <span className="user-name">{displayName}</span>
