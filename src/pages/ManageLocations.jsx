@@ -8,8 +8,17 @@ import {
   deleteLocationNode,
   addLocationEdge,
   deleteLocationEdge,
+  getVerticalConnections,
+  getStepFreeFloors,
+  resetToReferenceBuilding,
 } from "../services/locationService";
-import { generateQRForLocation } from "../utils/qrGenerator";
+import {
+  generateQRForLocation,
+  generateAllQRCodes,
+  openPrintSheet,
+  isQrEligible,
+} from "../utils/qrGenerator";
+import { QR_PRINT_SPEC, validatePrintSize } from "../config/buildingSpec";
 
 export default function ManageLocations() {
   const [graph, setGraph] = useState({ nodes: [], edges: [] });
@@ -34,6 +43,15 @@ export default function ManageLocations() {
   const [edgeForm, setEdgeForm] = useState({ from: "", to: "", weight: 5 });
   const [toast, setToast] = useState({ message: "", type: "" });
 
+  // QR print configuration
+  const [qrSizeKey, setQrSizeKey] = useState("door_sticker");
+  const [verticalLinks, setVerticalLinks] = useState([]);
+  const [stepFree, setStepFree] = useState([1]);
+  const [printing, setPrinting] = useState(false);
+
+  const qrSize = QR_PRINT_SPEC.sizes[qrSizeKey];
+  const qrValidation = validatePrintSize(qrSize.widthMm);
+
   useEffect(() => {
     loadGraph();
   }, []);
@@ -42,12 +60,49 @@ export default function ManageLocations() {
     setLoading(true);
     const data = await getLocationGraph();
     setGraph(data);
+    const [vertical, floors] = await Promise.all([
+      getVerticalConnections(),
+      getStepFreeFloors(),
+    ]);
+    setVerticalLinks(vertical);
+    setStepFree(floors);
     setLoading(false);
   }
 
   function showToast(message, type = "success") {
     setToast({ message, type });
     setTimeout(() => setToast({ message: "", type: "" }), 3500);
+  }
+
+  async function handlePrintAllQRCodes() {
+    setPrinting(true);
+    try {
+      const codes = await generateAllQRCodes(graph, { sizeKey: qrSizeKey });
+      if (codes.length === 0) {
+        showToast("No QR-eligible locations found.", "error");
+        return;
+      }
+      const opened = openPrintSheet(codes, { sizeKey: qrSizeKey });
+      if (!opened) {
+        showToast("Pop-up blocked. Allow pop-ups to open the print sheet.", "error");
+      } else {
+        showToast(`Opened print sheet with ${codes.length} codes.`);
+      }
+    } catch (err) {
+      showToast("Failed to build print sheet", "error");
+    } finally {
+      setPrinting(false);
+    }
+  }
+
+  async function handleResetBuilding() {
+    const confirmed = window.confirm(
+      "Discard all location edits and restore the reference 3-floor building? This cannot be undone."
+    );
+    if (!confirmed) return;
+    await resetToReferenceBuilding();
+    showToast("Reference building restored.");
+    await loadGraph();
   }
 
   function openAddNodeModal() {
@@ -121,7 +176,7 @@ export default function ManageLocations() {
   }
 
   function openAddEdgeModal() {
-    setEdgeForm({ from: "", to: "", weight: 5 });
+    setEdgeForm({ from: "", to: "", weight: 5, accessibility: "walk" });
     setIsEdgeModalOpen(true);
   }
 
@@ -155,9 +210,9 @@ export default function ManageLocations() {
   async function handleGenerateQR(nodeId) {
     const node = graph.nodes.find((n) => n.id === nodeId);
     if (!node) return;
-    const qr = await generateQRForLocation(nodeId, node.label);
+    const qr = await generateQRForLocation(nodeId, node.label, { sizeKey: qrSizeKey });
     if (qr) {
-      setQrPreview(qr);
+      setQrPreview({ ...qr, floor: node.floor });
     }
   }
 
@@ -220,7 +275,83 @@ export default function ManageLocations() {
           <button className="btn btn-outline" onClick={openAddEdgeModal}>
             + Add Path
           </button>
+          <button className="btn btn-outline" onClick={handlePrintAllQRCodes} disabled={printing}>
+            {printing ? "Preparing…" : "🖨️ Print QR Sheet"}
+          </button>
+          <button
+            className="btn btn-outline"
+            onClick={handleResetBuilding}
+            style={{ borderColor: "#dc2626", color: "#dc2626" }}
+          >
+            ↺ Reset Building
+          </button>
         </div>
+      </div>
+
+      {/* QR print configuration */}
+      <div className="qr-config-card">
+        <div className="qr-config-row">
+          <label className="qr-config-label" htmlFor="qr-size">QR print size</label>
+          <select
+            id="qr-size"
+            className="type-select-filter"
+            value={qrSizeKey}
+            onChange={(e) => setQrSizeKey(e.target.value)}
+          >
+            {Object.values(QR_PRINT_SPEC.sizes).map((s) => (
+              <option key={s.key} value={s.key}>
+                {s.label} — {s.widthMm}mm
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="qr-config-meta">
+          <span>{qrSize.note}</span>
+          <span>
+            Error correction “{QR_PRINT_SPEC.errorCorrectionLevel}” ·{" "}
+            {QR_PRINT_SPEC.PRINT_DPI} DPI · {QR_PRINT_SPEC.formats.join(" / ")}
+          </span>
+          {!qrValidation.ok && <span className="qr-config-warn">⚠ {qrValidation.message}</span>}
+        </div>
+      </div>
+
+      {/* Vertical connections — which floors connect vertically */}
+      <div className="dashboard-section">
+        <div className="section-header-flex">
+          <h2 className="section-title">Vertical Connections</h2>
+          <span className="text-muted">
+            Step-free floors: {stepFree.length === 3 ? "All floors" : stepFree.map((f) => `F${f}`).join(", ")}
+          </span>
+        </div>
+
+        {verticalLinks.length === 0 ? (
+          <p className="text-muted">
+            No stairs or elevator links found. Add a path with “stairs” or “lift” accessibility to
+            enable multi-floor routing.
+          </p>
+        ) : (
+          <div className="vertical-conn-list">
+            {verticalLinks.map((link) => (
+              <div key={`${link.from}-${link.to}`} className="vertical-conn-card">
+                <span className={`vertical-conn-icon ${link.connection}`}>
+                  {link.connection === "elevator" ? "🛗" : "📶"}
+                </span>
+                <div className="vertical-conn-info">
+                  <div className="vertical-conn-route">
+                    Floor {link.fromFloor} <span className="vertical-conn-arrow">↕</span> Floor {link.toFloor}
+                  </div>
+                  <div className="vertical-conn-meta">
+                    {link.connection === "elevator" ? "Elevator" : "Stairs"} ·{" "}
+                    {link.accessible ? "step-free ✓" : "not wheelchair accessible"}
+                  </div>
+                </div>
+                <span className={`vertical-conn-badge ${link.accessible ? "ok" : "no"}`}>
+                  {link.accessible ? "Accessible" : "Steps"}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Locations List - Mobile Cards */}
@@ -259,7 +390,8 @@ export default function ManageLocations() {
               <div className="location-card-actions">
                 <button
                   className="icon-btn qr-btn"
-                  title="Generate QR Code"
+                  title={isQrEligible(node) ? `Generate ${qrSize.widthMm}mm QR code` : "Corridors do not need a printed QR code"}
+                  disabled={!isQrEligible(node)}
                   onClick={(e) => { e.stopPropagation(); handleGenerateQR(node.id); }}
                 >
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -496,6 +628,23 @@ export default function ManageLocations() {
                     value={edgeForm.weight}
                     onChange={(e) => setEdgeForm({ ...edgeForm, weight: Number(e.target.value) })}
                   />
+                </div>
+
+                <div className="form-group">
+                  <label>Connection Type</label>
+                  <select
+                    value={edgeForm.accessibility || "walk"}
+                    onChange={(e) => setEdgeForm({ ...edgeForm, accessibility: e.target.value })}
+                  >
+                    <option value="walk">Corridor / walkable</option>
+                    <option value="ramp">Ramp (step-free)</option>
+                    <option value="lift">Elevator (step-free)</option>
+                    <option value="stairs">Stairs (not step-free)</option>
+                  </select>
+                  <span className="field-hint">
+                    Marking stairs or elevator makes this link a vertical connection and affects
+                    accessible routing.
+                  </span>
                 </div>
               </div>
 

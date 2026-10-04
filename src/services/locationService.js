@@ -163,9 +163,16 @@ export function resolveFloorPlanSource(floor) {
 export async function getVerticalConnections() {
   const data = await getLocationGraph();
   const ids = new Set(data.nodes.map((n) => n.id));
-  const live = data.edges.filter(
-    (e) => e.accessibility === "stairs" || e.accessibility === "lift"
-  );
+
+  // Only genuine cross-floor links count. Stairwell and lift *approach* edges
+  // on the same floor also carry stairs/lift accessibility, so filter on the
+  // floors actually differing rather than on the accessibility tag alone.
+  const live = data.edges.filter((e) => {
+    if (e.accessibility !== "stairs" && e.accessibility !== "lift") return false;
+    const from = data.nodes.find((n) => n.id === e.from);
+    const to = data.nodes.find((n) => n.id === e.to);
+    return from && to && from.floor !== to.floor;
+  });
 
   const rows = live.map((e) => {
     const from = data.nodes.find((n) => n.id === e.from);
