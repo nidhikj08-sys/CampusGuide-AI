@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AdminLayout from "../components/AdminLayout";
 import { getDashboardStats, getClassrooms } from "../services/classroomService";
+import { getScanStats } from "../services/scanLogService";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -11,6 +12,7 @@ export default function AdminDashboard() {
     totalTimetables: 5,
   });
   const [recentRooms, setRecentRooms] = useState([]);
+  const [scanStats, setScanStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,6 +23,9 @@ export default function AdminDashboard() {
 
         const rooms = await getClassrooms();
         setRecentRooms(rooms.slice(0, 5));
+
+        const scans = await getScanStats();
+        setScanStats(scans);
       } catch (err) {
         console.error("Dashboard data load error:", err);
       } finally {
@@ -35,7 +40,7 @@ export default function AdminDashboard() {
       title="Admin Dashboard"
       subtitle="Manage your campus resources and oversee building allocations."
     >
-      {/* 4 Metric Stats Cards (Matching Mockup 7) */}
+      {/* 4 Metric Stats Cards */}
       <div className="stats-grid">
         <div className="stat-card blue">
           <div className="stat-icon-wrapper">
@@ -94,7 +99,72 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Quick Actions (Matching Mockup 7) */}
+      {/* Navigation Analytics */}
+      {scanStats && (
+        <div className="dashboard-section">
+          <h2 className="section-title">Navigation Analytics</h2>
+          <div className="stats-grid four-col">
+            <div className="stat-card indigo">
+              <div className="stat-content">
+                <span className="stat-label">Total QR Scans</span>
+                <span className="stat-number">{scanStats.totalScans}</span>
+              </div>
+            </div>
+            <div className="stat-card teal">
+              <div className="stat-content">
+                <span className="stat-label">Today</span>
+                <span className="stat-number">{scanStats.todayScans}</span>
+              </div>
+            </div>
+            <div className="stat-card pink">
+              <div className="stat-content">
+                <span className="stat-label">This Week</span>
+                <span className="stat-number">{scanStats.weekScans}</span>
+              </div>
+            </div>
+            <div className="stat-card lime">
+              <div className="stat-content">
+                <span className="stat-label">Accessible Routes</span>
+                <span className="stat-number">{scanStats.accessibilityUsed}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Top Scanned Locations */}
+          {scanStats.topNodes.length > 0 && (
+            <div className="analytics-card">
+              <h3 className="analytics-title">Top Scanned Locations</h3>
+              <div className="analytics-list">
+                {scanStats.topNodes.map((item, idx) => (
+                  <div key={idx} className="analytics-item">
+                    <span className="analytics-rank">#{idx + 1}</span>
+                    <span className="analytics-name">{item.nodeId}</span>
+                    <span className="analytics-count">{item.count} scans</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Popular Routes */}
+          {scanStats.topRoutes.length > 0 && (
+            <div className="analytics-card">
+              <h3 className="analytics-title">Popular Routes</h3>
+              <div className="analytics-list">
+                {scanStats.topRoutes.map((item, idx) => (
+                  <div key={idx} className="analytics-item">
+                    <span className="analytics-rank">#{idx + 1}</span>
+                    <span className="analytics-name">{item.route}</span>
+                    <span className="analytics-count">{item.count} times</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Quick Actions */}
       <div className="dashboard-section">
         <h2 className="section-title">Quick Actions</h2>
         <div className="quick-actions-grid">
@@ -120,18 +190,16 @@ export default function AdminDashboard() {
             <span className="action-desc">View, edit, or filter 3-floor map</span>
           </Link>
 
-          <div className="action-card disabled-card" title="Coming in next phase">
+          <Link to="/admin/locations" className="action-card">
             <div className="action-icon icon-amber">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="8.5" cy="7" r="4" />
-                <line x1="20" y1="8" x2="20" y2="14" />
-                <line x1="23" y1="11" x2="17" y2="11" />
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
               </svg>
             </div>
-            <span className="action-label">Add Faculty</span>
-            <span className="action-desc">Enroll professors & staff</span>
-          </div>
+            <span className="action-label">Manage Locations</span>
+            <span className="action-desc">Nodes, paths & QR codes</span>
+          </Link>
 
           <div className="action-card disabled-card" title="Coming in next phase">
             <div className="action-icon icon-purple">
@@ -172,19 +240,19 @@ export default function AdminDashboard() {
               <tbody>
                 {recentRooms.map((room) => (
                   <tr key={room.id}>
-                    <td>
+                    <td data-label="Room">
                       <span className="room-pill">Room {room.room_number}</span>
                     </td>
-                    <td>
+                    <td data-label="Floor">
                       <span className="floor-badge">Floor {room.floor}</span>
                     </td>
-                    <td>
+                    <td data-label="Type">
                       <span className={`type-badge type-${room.type.toLowerCase().replace(/\s+/g, "-")}`}>
                         {room.type}
                       </span>
                     </td>
-                    <td>{room.capacity || 60} seats</td>
-                    <td className="cell-muted">{room.building || "Main Block"}</td>
+                    <td data-label="Capacity">{room.capacity || 60} seats</td>
+                    <td data-label="Building" className="cell-muted">{room.building || "Main Block"}</td>
                   </tr>
                 ))}
               </tbody>

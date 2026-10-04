@@ -90,7 +90,7 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   top: 0;
   bottom: 0;
   left: 0;
-  z-index: 100;
+  z-index: 300;
   transition: transform 0.3s ease;
 }
 
@@ -920,7 +920,7 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
     right: 0;
     bottom: 0;
     background: rgba(15, 23, 42, 0.4);
-    z-index: 90;
+    z-index: 250;
   }
 
   .admin-main {
@@ -1291,15 +1291,89 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 @media (max-width: 768px) {
   .login-container {
     flex-direction: column;
+    border-radius: 0;
+    min-height: 100vh;
+    max-width: 100%;
+    box-shadow: none;
+    border: none;
   }
   .login-left-panel {
     display: none;
   }
   .login-right-panel {
-    padding: 32px 24px;
+    padding: 24px 16px;
+    width: 100%;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  .login-form-box {
+    max-width: 100%;
+  }
+  .login-heading {
+    font-size: 1.5rem;
+  }
+  .login-subheading {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+  .auth-form-body {
+    gap: 14px;
+  }
+  .input-group-custom label {
+    font-size: 0.8rem;
+  }
+  .input-with-icon input,
+  .select-with-icon select {
+    height: 48px;
+    font-size: 1rem; /* Prevents zoom on iOS */
+    padding-left: 40px;
+    padding-right: 44px;
+  }
+  .input-with-icon svg,
+  .select-with-icon svg {
+    left: 14px;
+    width: 20px;
+    height: 20px;
+  }
+  .password-toggle-btn {
+    right: 14px;
+  }
+  .login-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .checkbox-label {
+    font-size: 0.9rem;
+  }
+  .checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+  }
+  .forgot-link {
+    font-size: 0.9rem;
+    padding-top: 4px;
+  }
+  .login-submit-btn {
+    height: 50px;
+    font-size: 1rem;
+    margin-top: 6px;
+  }
+  .divider {
+    margin: 24px 0;
   }
   .social-login {
     flex-direction: column;
+    gap: 8px;
+  }
+  .social-btn {
+    height: 48px;
+    font-size: 0.95rem;
+  }
+  .login-footer-text {
+    margin-top: 24px;
+    font-size: 0.9rem;
   }
 }
 
@@ -1462,6 +1536,488 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   .progress-line {
     width: 40px;
   }
+}
+
+/* ============================================================
+   MOBILE AUTH PAGES (Login, Signup, Forgot, Reset, Verify)
+   ============================================================ */
+@media (max-width: 480px) {
+  .center-screen {
+    padding: 16px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+  
+  .auth-card {
+    border-radius: 16px;
+    padding: 20px 16px;
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .auth-card h1 {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+  }
+  
+  .auth-card .muted {
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  
+  .signup-progress {
+    margin-bottom: 20px;
+  }
+  
+  .step-number {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+  }
+  
+  .step-label {
+    font-size: 0.65rem;
+  }
+  
+  .progress-line {
+    width: 50px;
+    height: 2px;
+  }
+  
+  .segmented {
+    margin-bottom: 16px;
+  }
+  
+  .seg {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+  
+  .input-group-custom {
+    margin-bottom: 4px;
+  }
+  
+  .input-group-custom label {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  
+  .input-with-icon input,
+  .input-with-icon select {
+    height: 48px;
+    font-size: 1rem; /* Prevents zoom on iOS */
+    padding-left: 40px;
+    padding-right: 44px;
+  }
+  
+  .input-with-icon svg {
+    left: 14px;
+    width: 20px;
+    height: 20px;
+  }
+  
+  .password-toggle-btn {
+    right: 14px;
+  }
+  
+  .password-strength {
+    margin-top: 6px;
+  }
+  
+  .strength-info {
+    font-size: 0.65rem;
+  }
+  
+  .form-actions {
+    gap: 10px;
+    margin-top: 4px;
+  }
+  
+  .form-actions .btn {
+    height: 48px;
+    font-size: 0.95rem;
+  }
+  
+  .btn-secondary {
+    height: 48px;
+    font-size: 0.95rem;
+  }
+  
+  .verify-actions,
+  .success-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .verify-actions .btn,
+  .success-actions .btn {
+    width: 100%;
+    max-width: none;
+    height: 48px;
+    font-size: 0.95rem;
+  }
+  
+  .success-state svg {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .success-state h1 {
+    font-size: 1.3rem;
+  }
+  
+  .loading-state .spinner {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .alert-error,
+  .alert-info {
+    font-size: 0.8rem;
+    padding: 10px;
+  }
+}
+
+/* ============================================================
+   ADMIN DASHBOARD MOBILE FIXES
+   ============================================================ */
+@media (max-width: 640px) {
+  /* Stats Grid - 2 columns on mobile */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  
+  .stat-card {
+    padding: 16px 12px;
+    gap: 10px;
+  }
+  
+  .stat-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
+  }
+  
+  .stat-number {
+    font-size: 1.3rem;
+  }
+  
+  /* Quick Actions Grid - 2 columns */
+  .quick-actions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .action-card {
+    padding: 14px 10px;
+  }
+  
+  .action-icon {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 10px;
+  }
+  
+  .action-label {
+    font-size: 0.75rem;
+  }
+  
+  .action-desc {
+    font-size: 0.65rem;
+  }
+  
+  /* Table - Card-based layout instead of horizontal scroll */
+  .table-responsive {
+    overflow-x: visible;
+  }
+  
+  .table-card {
+    box-shadow: none;
+    border: none;
+    background: transparent;
+  }
+  
+  .custom-data-table {
+    display: block;
+  }
+  
+  .custom-data-table thead {
+    display: none;
+  }
+  
+  .custom-data-table tbody {
+    display: block;
+  }
+  
+  .custom-data-table tr {
+    display: block;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+  
+  .custom-data-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #f1f5f9;
+  }
+  
+  .custom-data-table td:last-child {
+    border-bottom: none;
+  }
+  
+  .custom-data-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #64748b;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  /* Section headers */
+  .section-title {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+  
+  .section-header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .view-all-link {
+    font-size: 0.8rem;
+  }
+  
+  /* Analytics cards */
+  .analytics-card {
+    padding: 16px;
+  }
+  
+  .analytics-title {
+    font-size: 0.9rem;
+  }
+  
+  .analytics-item {
+    padding: 10px 0;
+  }
+  
+  .analytics-rank {
+    font-size: 0.7rem;
+    min-width: 30px;
+  }
+  
+  .analytics-name {
+    font-size: 0.8rem;
+  }
+  
+  .analytics-count {
+    font-size: 0.75rem;
+  }
+  
+  /* Admin sidebar header */
+  .sidebar-brand {
+    padding: 16px;
+  }
+  
+  .brand-text h2 {
+    font-size: 1.1rem;
+  }
+  
+  .brand-text p {
+    font-size: 0.7rem;
+  }
+  
+  .sidebar-nav .sidebar-link {
+    padding: 12px 16px;
+  }
+  
+  .nav-label {
+    font-size: 0.85rem;
+  }
+
+  /* Mobile sidebar fixes - ensure logout visible above bottom nav */
+  .admin-sidebar.open {
+    padding-bottom: 80px; /* Space for bottom nav */
+  }
+  
+  .sidebar-footer {
+    position: sticky;
+    bottom: 0;
+    background: #0f1c32;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 1;
+  }
+  
+  .sidebar-logout-btn {
+    padding: 14px 16px;
+    font-size: 1rem;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 400px) {
+  .stats-grid,
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-card,
+  .action-card {
+    text-align: center;
+    flex-direction: column;
+  }
+  
+  .stat-card {
+    gap: 8px;
+  }
+  
+  .action-icon {
+    margin-bottom: 8px;
+  }
+}
+
+/* ============================================================
+   NOTIFICATION PANEL (Student & Faculty Dashboards)
+   ============================================================ */
+.notification-panel {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 24px;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.notification-header h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.notification-header .muted {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.notification-icon {
+  flex-shrink: 0;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.notification-message {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-left: auto;
+}
+
+.empty-state {
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  color: #cbd5e1;
+}
+
+.empty-state p {
+  color: #64748b;
+  margin: 8px 0 0;
+}
+
+/* Tab bars */
+.student-tab-bar,
+.faculty-tab-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.student-tab-bar button,
+.faculty-tab-bar button {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.student-tab-bar button.active,
+.faculty-tab-bar button.active {
+  color: #3b6cf6;
+}
+
+.student-tab-bar button:hover:not(.active),
+.faculty-tab-bar button:hover:not(.active) {
+  color: #2563eb;
 }
 
 /* ============================================================
@@ -2683,5 +3239,137 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
     padding: 8px 4px;
   }
 }
+
+/* ============================================================
+   NOTIFICATION PANEL (Student & Faculty Dashboards)
+   ============================================================ */
+.notification-panel {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 24px;
+}
+
+.notification-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.notification-header h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.notification-header .muted {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.notification-icon {
+  flex-shrink: 0;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.notification-message {
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.notification-time {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-left: auto;
+}
+
+.empty-state {
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  color: #cbd5e1;
+}
+
+.empty-state p {
+  color: #64748b;
+  margin: 8px 0 0;
+}
+
+/* Tab bars */
+.student-tab-bar,
+.faculty-tab-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.student-tab-bar button,
+.faculty-tab-bar button {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.student-tab-bar button.active,
+.faculty-tab-bar button.active {
+  color: #3b6cf6;
+}
+
+.student-tab-bar button:hover:not(.active),
+.faculty-tab-bar button:hover:not(.active) {
+  color: #2563eb;
+}
+
+/* ============================================================
+   SCREEN 2 & 5: DASHBOARD ACTION CARDS & SCHEDULE
+   ============================================================ */
 
 

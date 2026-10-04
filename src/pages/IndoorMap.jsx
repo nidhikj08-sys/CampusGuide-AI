@@ -1,47 +1,74 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import { getCampusMapGraph } from "../services/navigationGraph";
+import { recordScan } from "../services/scanLogService";
 
 export default function IndoorMap() {
   const [searchParams] = useSearchParams();
   const graph = getCampusMapGraph();
 
-  const [fromNode, setFromNode] = useState("main_entrance");
-  const [toNode, setToNode] = useState("r_205");
-  const [activeFloor, setActiveFloor] = useState(2);
+  const [fromNode, setFromNode] = useState("f1_entrance");
+  const [toNode, setToNode] = useState("r_101");
+  const [activeFloor, setActiveFloor] = useState(1);
   const [routePath, setRoutePath] = useState([]);
   const [distanceInfo, setDistanceInfo] = useState(null);
+  const [directions, setDirections] = useState([]);
+  const [accessibleOnly, setAccessibleOnly] = useState(false);
+  const [showScanner, setShowScanner] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [cameraError, setCameraError] = useState("");
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
 
-  // Read URL query parameter ?dest=r_204 to auto-target room from timetable
   useEffect(() => {
     const dest = searchParams.get("dest");
+    const fromParam = searchParams.get("from");
     if (dest && graph.nodes.has(dest)) {
       setToNode(dest);
-      calculateRoute("main_entrance", dest);
+      calculateRoute(fromParam && graph.nodes.has(fromParam) ? fromParam : "f1_entrance", dest);
     } else {
-      calculateRoute("main_entrance", "r_205");
+      calculateRoute("f1_entrance", "r_101");
     }
   }, [searchParams]);
 
   function calculateRoute(start, end) {
-    const path = graph.findShortestPath(start, end);
+    let path = graph.findShortestPath(start, end);
+    
+    if (accessibleOnly && path.length > 1) {
+      path = graph.findAccessiblePath(start, end) || path;
+    }
+    
     setRoutePath(path);
 
     if (path.length > 1) {
-      // Calculate approximate distance
       let totalMeters = 0;
+      const steps = [];
       for (let i = 0; i < path.length - 1; i++) {
         const dx = path[i + 1].x - path[i].x;
         const dy = path[i + 1].y - path[i].y;
-        totalMeters += Math.round(Math.hypot(dx, dy) * 0.25);
+        const seg = Math.round(Math.hypot(dx, dy) * 0.25);
+        totalMeters += seg;
+        
+        const edge = graph.getEdge(path[i].id, path[i + 1].id);
+        if (edge && (edge.accessibility === "lift" || edge.accessibility === "ramp")) {
+          steps.push({ action: `Use ${edge.accessibility === "lift" ? "elevator" : "ramp"}`, from: path[i].label, to: path[i + 1].label });
+        } else if (i === 0) {
+          steps.push({ action: "Start", from: path[i].label, to: path[i + 1].label });
+        } else if (i === path.length - 2) {
+          steps.push({ action: "Arrive", from: path[i].label, to: path[i + 1].label });
+        } else {
+          steps.push({ action: "Walk", from: path[i].label, to: path[i + 1].label, distance: seg });
+        }
       }
+      setDirections(steps);
       setDistanceInfo({
         meters: Math.max(12, totalMeters),
         timeSec: Math.max(30, Math.round(totalMeters * 1.2)),
       });
     } else {
       setDistanceInfo(null);
+      setDirections([]);
     }
   }
 
@@ -49,205 +76,284 @@ export default function IndoorMap() {
     calculateRoute(fromNode, toNode);
   }
 
-  // Quick QR Scan Simulator (simulates scanning a physical QR code at Entrance or Room)
-  function handleScanQR() {
-    setFromNode("r_stairs");
-    calculateRoute("r_stairs", toNode);
+  function handleFromChange(e) {
+    const newFrom = e.target.value;
+    setFromNode(newFrom);
+    calculateRoute(newFrom, toNode);
   }
+
+  function handleToChange(e) {
+    const newTo = e.target.value;
+    setToNode(newTo);
+    calculateRoute(fromNode, newTo);
+  }
+
+  async function startQRScanner() {
+    setCameraError("");
+    setShowScanner(true);
+    setScanning(true);
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" },
+      });
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        videoRef.current.play();
+      }
+    } catch (err) {
+      console.error("Camera error:", err);
+      setCameraError("Camera permission denied. Use manual select or upload a QR image.");
+      setScanning(false);
+    }
+  }
+
+  function stopQRScanner() {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+    setShowScanner(false);
+    setScanning(false);
+  }
+
+  async function handleFileUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    try {
+      const { BrowserQRCodeReader } = await import("@zxing/browser");
+      const reader = new BrowserQRCodeReader();
+      const result = await reader.decodeFromFile(file);
+      const text = result.getText();
+      handleQRResult(text);
+    } catch (err) {
+      console.error("QR decode error:", err);
+      alert("Could not read QR code. Try again.");
+    }
+  }
+
+  function handleQRResult(text) {
+    try {
+      const url = new URL(text);
+      const from = url.searchParams.get("from");
+      const dest = url.searchParams.get("dest");
+      
+      if (from && graph.nodes.has(from)) {
+        setFromNode(from);
+        if (dest && graph.nodes.has(dest)) {
+          setToNode(dest);
+          calculateRoute(from, dest);
+        } else {
+          calculateRoute(from, toNode);
+        }
+        stopQRScanner();
+      } else {
+        alert("Invalid QR code for this campus.");
+      }
+    } catch (err) {
+      alert("Invalid QR code format.");
+    }
+  }
+
+  useEffect(() => {
+    return () => stopQRScanner();
+  }, []);
 
   const startCoords = graph.nodes.get(fromNode);
   const endCoords = graph.nodes.get(toNode);
-
-  // SVG points for polyline
   const polylinePoints = routePath.map((p) => `${p.x},${p.y}`).join(" ");
+
+  const typeColors = {
+    classroom: "#e0e7ff",
+    lab: "#fce7f3",
+    office: "#fef3c7",
+    "seminar hall": "#dcfce7",
+    "staff room": "#f1f5f9",
+    stairs: "#dcfce7",
+    elevator: "#f1f5f9",
+    entrance: "#fef3c7",
+    corridor: "#f8fafc",
+    landmark: "#fae8ff",
+  };
 
   return (
     <AppLayout>
-      <div className="indoor-nav-page">
-        {/* Top Breadcrumb & Title */}
+      <div className="indoor-nav-page mobile-nav">
+        {/* Top Bar */}
         <div className="map-top-bar">
-          <Link to="/student" className="back-link">
-            ← Back to Dashboard
-          </Link>
+          <Link to="/student" className="back-link">← Back</Link>
           <h1 className="nav-page-title">Find Your Classroom</h1>
         </div>
 
-        {/* Route Selector Controls Bar (Matching Screen 4) */}
+        {/* Route Controls */}
         <div className="route-controls-card">
           <div className="select-col">
             <label>From</label>
-            <select value={fromNode} onChange={(e) => setFromNode(e.target.value)}>
-              <option value="main_entrance">Main Entrance</option>
-              <option value="r_stairs">Stairs</option>
-              <option value="r_201">Room 201</option>
-              <option value="r_202">Room 202</option>
-              <option value="r_203">Room 203</option>
-              <option value="r_204">Room 204</option>
-              <option value="r_205">Room 205</option>
-              <option value="r_206">Room 206</option>
-              <option value="r_207">Room 207</option>
+            <select value={fromNode} onChange={handleFromChange}>
+              {Array.from(graph.nodes.values())
+                .filter((n) => n.isRoom || n.type === "entrance")
+                .map((n) => (
+                  <option key={n.id} value={n.id}>{n.label}</option>
+                ))}
             </select>
           </div>
 
           <div className="select-col">
             <label>To</label>
-            <select value={toNode} onChange={(e) => setToNode(e.target.value)}>
-              <option value="r_205">Room 205</option>
-              <option value="r_201">Room 201</option>
-              <option value="r_202">Room 202</option>
-              <option value="r_203">Room 203</option>
-              <option value="r_204">Room 204</option>
-              <option value="r_206">Room 206</option>
-              <option value="r_207">Room 207</option>
-              <option value="r_stairs">Stairs</option>
+            <select value={toNode} onChange={handleToChange}>
+              {Array.from(graph.nodes.values())
+                .filter((n) => n.isRoom)
+                .map((n) => (
+                  <option key={n.id} value={n.id}>{n.label}</option>
+                ))}
             </select>
           </div>
 
           <button className="btn-show-route" onClick={handleShowRoute}>
-            Show Route
+            Go
           </button>
 
-          <button className="btn-qr-scan" onClick={handleScanQR} title="Simulate scanning a QR location badge">
-            📷 Scan QR
+          <button className="btn-qr-scan" onClick={startQRScanner} title="Scan QR code">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+              <rect x="14" y="14" width="3" height="3" />
+              <rect x="18" y="14" width="3" height="3" />
+              <rect x="14" y="18" width="3" height="3" />
+              <rect x="18" y="18" width="3" height="3" />
+            </svg>
           </button>
         </div>
 
-        {/* Distance guidance banner if route found */}
+        {/* Accessibility Toggle */}
+        <div className="accessibility-toggle">
+          <label className="toggle-label">
+            <input
+              type="checkbox"
+              checked={accessibleOnly}
+              onChange={(e) => {
+                setAccessibleOnly(e.target.checked);
+                handleShowRoute();
+              }}
+            />
+            <span className="toggle-switch"></span>
+            <span className="toggle-text">Accessible route (no stairs)</span>
+          </label>
+        </div>
+
+        {/* Distance Banner */}
         {distanceInfo && (
           <div className="route-info-banner">
             <div className="route-metric">
-              <span className="metric-label">Estimated Walking Distance:</span>
-              <strong className="metric-value">~{distanceInfo.meters} meters</strong>
+              <span className="metric-label">Distance</span>
+              <strong className="metric-value">~{distanceInfo.meters}m</strong>
             </div>
             <div className="route-metric">
-              <span className="metric-label">Time to Reach:</span>
-              <strong className="metric-value">~{Math.round(distanceInfo.timeSec / 60) || 1} min</strong>
+              <span className="metric-label">Walking time</span>
+              <strong className="metric-value">~{Math.round(distanceInfo.timeSec / 60)} min</strong>
             </div>
             <div className="route-metric">
-              <span className="metric-label">Shortest Path Algorithm:</span>
-              <span className="algo-badge">Dijkstra's Algorithm (Active)</span>
+              <span className="metric-label">Algorithm</span>
+              <span className="algo-badge">Dijkstra</span>
             </div>
           </div>
         )}
 
-        {/* Main Map & Sidebar Container */}
-        <div className="map-view-split">
-          {/* Left Column: Floor Switcher & Legend (Matching Screen 4) */}
-          <div className="map-left-sidebar">
-            <div className="floor-selector-box">
-              <button 
-                className={`floor-nav-btn ${activeFloor === 1 ? "active" : ""}`}
-                onClick={() => setActiveFloor(1)}
-              >
-                Floor 1
-              </button>
-              <button 
-                className={`floor-nav-btn ${activeFloor === 2 ? "active" : ""}`}
-                onClick={() => setActiveFloor(2)}
-              >
-                Floor 2
-              </button>
-              <button 
-                className={`floor-nav-btn ${activeFloor === 3 ? "active" : ""}`}
-                onClick={() => setActiveFloor(3)}
-              >
-                Floor 3
-              </button>
+        {/* Turn-by-Turn Directions */}
+        {directions.length > 0 && (
+          <div className="directions-card">
+            <h3 className="directions-title">Directions</h3>
+            <div className="directions-list">
+              {directions.map((step, idx) => (
+                <div key={idx} className="direction-step">
+                  <div className="step-number">{idx + 1}</div>
+                  <div className="step-content">
+                    <strong>{step.action}</strong>
+                    <span className="step-route">
+                      {step.from} → {step.to}
+                      {step.distance ? ` (${step.distance}m)` : ""}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
+          </div>
+        )}
 
-            <div className="legend-card">
-              <h4>Legend</h4>
-              <ul className="legend-list">
-                <li>
-                  <span className="legend-icon circle-blue"></span>
-                  <span>Your Location</span>
-                </li>
-                <li>
-                  <span className="legend-icon pin-red">📍</span>
-                  <span>Destination</span>
-                </li>
-                <li>
-                  <span className="legend-icon line-blue"></span>
-                  <span>Path</span>
-                </li>
-                <li>
-                  <span className="legend-icon box-room"></span>
-                  <span>Room</span>
-                </li>
-                <li>
-                  <span className="legend-icon stairs-green">📶</span>
-                  <span>Stairs</span>
-                </li>
-              </ul>
+        {/* Floor Map */}
+        <div className="map-floor-section">
+          <div className="floor-indicator">
+            <span className="floor-label">Floor {activeFloor}</span>
+            <div className="floor-dots">
+              {[1, 2, 3].map((f) => (
+                <button
+                  key={f}
+                  className={`floor-dot ${activeFloor === f ? "active" : ""}`}
+                  onClick={() => setActiveFloor(f)}
+                >
+                  {f}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Right Column: 2D Blueprint Floor Map (Matching Screen 4) */}
           <div className="map-canvas-wrapper">
-            <svg 
-              viewBox="0 0 540 440" 
+            <svg
+              viewBox="0 0 540 440"
               className="indoor-svg-blueprint"
               xmlns="http://www.w3.org/2000/svg"
             >
-              {/* Outer Building Footprint */}
               <rect x="20" y="20" width="500" height="400" rx="6" fill="#f8fafc" stroke="#94a3b8" strokeWidth="2.5" />
-
-              {/* Central Courtyard / Void */}
               <rect x="180" y="180" width="160" height="100" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="2" strokeDasharray="4 4" />
               <text x="260" y="235" textAnchor="middle" fill="#94a3b8" fontSize="12" fontWeight="600">Open Courtyard</text>
 
-              {/* TOP ROOMS (Room 201, 202, 203) */}
-              <g className="map-room" onClick={() => { setToNode("r_201"); calculateRoute(fromNode, "r_201"); }}>
-                <rect x="40" y="35" width="110" height="90" rx="3" fill="#e0e7ff" stroke="#6366f1" strokeWidth="1.5" />
-                <text x="95" y="85" textAnchor="middle" fill="#1e1b4b" fontSize="12" fontWeight="700">Room 201</text>
-              </g>
+              {Array.from(graph.nodes.values())
+                .filter((n) => n.floor === activeFloor)
+                .map((node) => {
+                  const isSelected = node.id === fromNode || node.id === toNode;
+                  const fill = typeColors[node.type] || "#f8fafc";
+                  return (
+                    <g
+                      key={node.id}
+                      className={`map-node ${isSelected ? "selected" : ""}`}
+                      onClick={() => {
+                        if (node.isRoom || node.type === "entrance") {
+                          setToNode(node.id);
+                          calculateRoute(fromNode, node.id);
+                        }
+                      }}
+                    >
+                      {node.isRoom || node.type === "entrance" ? (
+                        <rect
+                          x={node.x - 55}
+                          y={node.y - 35}
+                          width="110"
+                          height="70"
+                          rx="4"
+                          fill={fill}
+                          stroke={isSelected ? "#2563eb" : "#6366f1"}
+                          strokeWidth={isSelected ? "2.5" : "1.5"}
+                        />
+                      ) : (
+                        <circle cx={node.x} cy={node.y} r="6" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1.5" />
+                      )}
+                      <text
+                        x={node.x}
+                        y={node.y + (node.isRoom ? 5 : 15)}
+                        textAnchor="middle"
+                        fill="#1e293b"
+                        fontSize="11"
+                        fontWeight={isSelected ? "700" : "500"}
+                      >
+                        {node.label}
+                      </text>
+                    </g>
+                  );
+                })}
 
-              <g className="map-room" onClick={() => { setToNode("r_202"); calculateRoute(fromNode, "r_202"); }}>
-                <rect x="160" y="35" width="110" height="90" rx="3" fill="#e0e7ff" stroke="#6366f1" strokeWidth="1.5" />
-                <text x="215" y="85" textAnchor="middle" fill="#1e1b4b" fontSize="12" fontWeight="700">Room 202</text>
-              </g>
-
-              <g className="map-room" onClick={() => { setToNode("r_203"); calculateRoute(fromNode, "r_203"); }}>
-                <rect x="280" y="35" width="110" height="90" rx="3" fill="#e0e7ff" stroke="#6366f1" strokeWidth="1.5" />
-                <text x="335" y="85" textAnchor="middle" fill="#1e1b4b" fontSize="12" fontWeight="700">Room 203</text>
-              </g>
-
-              {/* WEST SIDE: STAIRS (Green block) */}
-              <g className="map-stairs" onClick={() => { setToNode("r_stairs"); calculateRoute(fromNode, "r_stairs"); }}>
-                <rect x="40" y="160" width="100" height="110" rx="4" fill="#dcfce7" stroke="#22c55e" strokeWidth="2" />
-                <text x="90" y="210" textAnchor="middle" fill="#14532d" fontSize="12" fontWeight="700">📶 Stairs</text>
-                <text x="90" y="228" textAnchor="middle" fill="#166534" fontSize="9">To Fl 1 / 3</text>
-              </g>
-
-              {/* EAST SIDE: Room 204 */}
-              <g className="map-room" onClick={() => { setToNode("r_204"); calculateRoute(fromNode, "r_204"); }}>
-                <rect x="400" y="160" width="105" height="140" rx="3" fill="#e0e7ff" stroke="#6366f1" strokeWidth="1.5" />
-                <text x="452" y="235" textAnchor="middle" fill="#1e1b4b" fontSize="12" fontWeight="700">Room 204</text>
-              </g>
-
-              {/* BOTTOM ROOMS (Room 205, 206, 207) */}
-              <g className="map-room" onClick={() => { setToNode("r_205"); calculateRoute(fromNode, "r_205"); }}>
-                <rect x="85" y="315" width="105" height="90" rx="3" fill="#e0e7ff" stroke="#6366f1" strokeWidth="1.5" />
-                <text x="137" y="365" textAnchor="middle" fill="#1e1b4b" fontSize="12" fontWeight="700">Room 205</text>
-              </g>
-
-              <g className="map-room" onClick={() => { setToNode("r_206"); calculateRoute(fromNode, "r_206"); }}>
-                <rect x="200" y="315" width="105" height="90" rx="3" fill="#e0e7ff" stroke="#6366f1" strokeWidth="1.5" />
-                <text x="252" y="365" textAnchor="middle" fill="#1e1b4b" fontSize="12" fontWeight="700">Room 206</text>
-              </g>
-
-              <g className="map-room" onClick={() => { setToNode("r_207"); calculateRoute(fromNode, "r_207"); }}>
-                <rect x="315" y="315" width="105" height="90" rx="3" fill="#e0e7ff" stroke="#6366f1" strokeWidth="1.5" />
-                <text x="367" y="365" textAnchor="middle" fill="#1e1b4b" fontSize="12" fontWeight="700">Room 207</text>
-              </g>
-
-              {/* Main Entrance Marker */}
-              <g className="entrance-label">
-                <rect x="25" y="340" width="50" height="40" rx="3" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1.5" />
-                <text x="50" y="362" textAnchor="middle" fill="#92400e" fontSize="9" fontWeight="700">Entrance</text>
-              </g>
-
-              {/* Dijkstra Shortest Path Dynamic Polyline */}
               {routePath.length > 1 && (
                 <polyline
                   points={polylinePoints}
@@ -261,29 +367,55 @@ export default function IndoorMap() {
                 />
               )}
 
-              {/* Start Node Pin (Your Location) */}
               {startCoords && (
                 <g transform={`translate(${startCoords.x}, ${startCoords.y})`}>
-                  <circle cx="0" cy="0" r="10" fill="#3b82f6" fillOpacity="0.3" className="pulse-pin" />
-                  <circle cx="0" cy="0" r="6" fill="#2563eb" stroke="#ffffff" strokeWidth="2" />
+                  <circle cx="0" cy="0" r="12" fill="#3b82f6" fillOpacity="0.2" className="pulse-pin" />
+                  <circle cx="0" cy="0" r="7" fill="#2563eb" stroke="#fff" strokeWidth="2.5" />
                 </g>
               )}
 
-              {/* Destination Red Pin */}
               {endCoords && (
-                <g transform={`translate(${endCoords.x}, ${endCoords.y - 10})`}>
-                  <path 
-                    d="M0 -14 C-7 -14 -10 -9 -10 -3 C-10 4 0 14 0 14 C0 14 10 4 10 -3 C10 -9 7 -14 0 -14 Z" 
-                    fill="#ef4444" 
-                    stroke="#ffffff" 
-                    strokeWidth="1.5" 
+                <g transform={`translate(${endCoords.x}, ${endCoords.y - 12})`}>
+                  <path
+                    d="M0 -14 C-7 -14 -10 -9 -10 -3 C-10 4 0 14 0 14 C0 14 10 4 10 -3 C10 -9 7 -14 0 -14 Z"
+                    fill="#ef4444"
+                    stroke="#fff"
+                    strokeWidth="1.5"
                   />
-                  <circle cx="0" cy="-4" r="3" fill="#ffffff" />
+                  <circle cx="0" cy="-4" r="3" fill="#fff" />
                 </g>
               )}
             </svg>
           </div>
         </div>
+
+        {/* QR Scanner Modal */}
+        {showScanner && (
+          <div className="scanner-overlay" onClick={stopQRScanner}>
+            <div className="scanner-modal" onClick={(e) => e.stopPropagation()}>
+              <div className="scanner-header">
+                <h3>Scan QR Code</h3>
+                <button className="modal-close-btn" onClick={stopQRScanner}>✕</button>
+              </div>
+              <div className="scanner-body">
+                {cameraError ? (
+                  <div className="scanner-error">
+                    <p>{cameraError}</p>
+                    <label className="btn btn-primary">
+                      Upload QR Image
+                      <input type="file" accept="image/*" capture="environment" onChange={handleFileUpload} hidden />
+                    </label>
+                  </div>
+                ) : (
+                  <>
+                    <video ref={videoRef} className="qr-video" playsInline muted />
+                    <div className="scanner-frame"></div>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </AppLayout>
   );

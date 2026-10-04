@@ -7,6 +7,11 @@ export default defineConfig({
     host: true,
     port: 5173
   },
+  build: {
+    rollupOptions: {
+      external: ["@zxing/browser", "qrcode"]
+    }
+  },
   plugins: [
     react(),
     VitePWA({

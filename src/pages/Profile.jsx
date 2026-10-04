@@ -97,7 +97,7 @@ const BASE_FIELDS = {
    Main Component
    ────────────────────────────────────────────── */
 export default function Profile() {
-  const { profile, updateProfile, user } = useAuth();
+  const { profile, updateProfile, user, logout } = useAuth();
   const navigate = useNavigate();
   const [editing, setEditing] = useState(false);
   const [activeTab, setActiveTab] = useState("id"); // "id" | "info" | "account"
@@ -496,8 +496,8 @@ export default function Profile() {
                 </div>
               </div>
 
-              <div className="account-section">
-                <div className="account-section-title">Role &amp; Access</div>
+<div className="account-section">
+                <div className="account-section-title">Role & Access</div>
                 <div className="profile-row" style={{ borderBottom: "none" }}>
                   <dt>Account Type</dt>
                   <dd><span className={`role-badge role-${profile.role}`}>{profile.role?.toUpperCase()}</span></dd>
@@ -505,6 +505,23 @@ export default function Profile() {
                 <div className="profile-row" style={{ borderBottom: "none" }}>
                   <dt>Account Email</dt>
                   <dd>{profile.email}</dd>
+                </div>
+              </div>
+
+              <div className="account-section" style={{ marginTop: 24, paddingTop: 20, borderTop: "1px solid #e2e8f0" }}>
+                <div className="account-section-title" style={{ color: "#dc2626" }}>Danger Zone</div>
+                <div className="account-danger-row">
+                  <div>
+                    <div style={{ fontWeight: 600, color: "#dc2626" }}>Sign Out</div>
+                    <div className="muted" style={{ fontSize: "0.8rem", marginTop: 2 }}>Log out of your CampusGuide account on this device</div>
+                  </div>
+                  <button 
+                    className="btn btn-danger btn-sm" 
+                    onClick={logout}
+                    style={{ background: "#dc2626", borderColor: "#dc2626", height: 36 }}
+                  >
+                    Logout
+                  </button>
                 </div>
               </div>
 

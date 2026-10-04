@@ -10,6 +10,7 @@ import StudentDashboard from "./pages/StudentDashboard";
 import FacultyDashboard from "./pages/FacultyDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import ManageClassrooms from "./pages/ManageClassrooms";
+import ManageLocations from "./pages/ManageLocations";
 import Timetable from "./pages/Timetable";
 import IndoorMap from "./pages/IndoorMap";
 import RequestChange from "./pages/RequestChange";
@@ -39,6 +40,7 @@ export default function App() {
       {/* 7 & 8. Admin Flow (Screens 7, 8) */}
       <Route path="/admin" element={<ProtectedRoute allow={["admin"]}><AdminDashboard /></ProtectedRoute>} />
       <Route path="/admin/classrooms" element={<ProtectedRoute allow={["admin"]}><ManageClassrooms /></ProtectedRoute>} />
+      <Route path="/admin/locations" element={<ProtectedRoute allow={["admin"]}><ManageLocations /></ProtectedRoute>} />
 
       {/* Shared Profile */}
       <Route path="/profile" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><Profile /></ProtectedRoute>} />
