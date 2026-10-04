@@ -230,14 +230,11 @@ export default function IndoorMap() {
   };
 
   return (
-    <AppLayout>
+    <AppLayout
+      title="Campus Map"
+      subtitle="Find your way around campus"
+    >
       <div className="indoor-nav-page mobile-nav">
-        {/* Top Bar */}
-        <div className="map-top-bar">
-          <Link to="/student" className="back-link">← Back</Link>
-          <h1 className="nav-page-title">Find Your Classroom</h1>
-        </div>
-
         {/* Route Controls */}
         <div className="route-controls-card">
           <div className="select-col">

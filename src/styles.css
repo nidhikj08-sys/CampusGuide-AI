@@ -288,7 +288,7 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 }
 
 .admin-user-info .user-name {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: #0f172a;
 }
@@ -441,8 +441,141 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 .icon-amber { background: #fef3c7; color: #d97706; }
 .icon-purple { background: #f3e8ff; color: #9333ea; }
 
-.stats-grid.four-col {
+/* ============================================================
+   ADMIN DASHBOARD SPECIFIC GRIDS
+   ============================================================ */
+.stats-grid-2x2 {
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.quick-actions-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.stats-grid-four {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .stats-grid-four {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .stats-grid-2x2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .quick-actions-2x2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .stats-grid-four {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+/* Recent Changes List */
+.recent-changes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recent-change-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.recent-change-item:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.recent-change-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.recent-change-icon.icon-blue { background: #2563eb; }
+.recent-change-icon.icon-green { background: #16a34a; }
+.recent-change-icon.icon-amber { background: #d97706; }
+.recent-change-icon.icon-purple { background: #9333ea; }
+
+.recent-change-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recent-change-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-change-desc {
+  font-size: 0.75rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-change-time {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Consistent Header Spacing for All Pages */
+.dashboard-header-unified {
+  margin-bottom: 16px;
+}
+
+.dashboard-header-unified .header-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px;
+  line-height: 1.2;
+}
+
+.dashboard-header-unified .header-subtitle {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.3;
 }
 
 @media (max-width: 640px) {
@@ -1961,6 +2094,83 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   }
 }
 
+/* Classroom Cards (Mobile) */
+.classrooms-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.classroom-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.classroom-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.classroom-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.classroom-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.classroom-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.classroom-card-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.classroom-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* Desktop / Mobile visibility utilities */
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none;
+  }
+  
+  .mobile-only {
+    display: block;
+  }
+}
+
 /* Very small screens */
 @media (max-width: 400px) {
   .stats-grid,
@@ -3319,6 +3529,86 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   margin: 0;
 }
 
+/* ── Notification read / unread states ──────────────────────── */
+.notification-item.notif-unread {
+  background: linear-gradient(135deg, #f0f7ff 0%, #f8faff 100%);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 6px;
+  border-bottom: none;
+  border-left: 3px solid #3b82f6;
+  transition: background 0.2s;
+}
+
+.notification-item.notif-read {
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 4px;
+  border-bottom: none;
+  opacity: 0.7;
+}
+
+.notification-item.notif-unread:hover {
+  background: #e8f2ff;
+}
+
+/* Unread blue dot next to title */
+.unread-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  background: #3b82f6;
+  border-radius: 50%;
+  margin-left: 6px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.notification-title {
+  display: flex;
+  align-items: center;
+}
+
+/* Notification badge on tab button */
+.notif-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 999px;
+  line-height: 1;
+}
+
+/* Mark all read button */
+.mark-all-read-btn {
+  background: none;
+  border: 1px solid #3b82f6;
+  color: #3b82f6;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.mark-all-read-btn:hover {
+  background: #3b82f6;
+  color: #fff;
+}
+
+/* Extra icon colors for Supabase notification types */
+.notif-warning   { background: #fffbeb; }
+.notif-success   { background: #f0fdf4; }
+.notif-error     { background: #fef2f2; }
+.notif-room_change { background: #eff6ff; }
+
 /* Dashboard tab bars (segmented pill style) */
 .student-tab-bar,
 .faculty-tab-bar {
@@ -4168,6 +4458,323 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 
   .route-metric {
     flex-basis: 100%;
+  }
+}
+
+/* ============================================================
+   AUTH PAGES — MOBILE-FIRST SIZING (target: 360 × 800)
+   ----------------------------------------------------------
+   Standards applied:
+   · Tap targets ......... iOS HIG 44×44pt, Material 3 48×48dp
+   · Field height ......... 48px, consistent across login + signup
+   · Input font ........... 16px floor. Below 16px iOS Safari and
+                            Android Chrome both zoom the viewport
+                            on focus, which breaks fixed layouts.
+   · Text floor ........... 11px legibility minimum
+   · Safe areas ........... env(safe-area-inset-*) for notched
+                            devices and the iOS gesture bar
+   · Viewport height ...... dvh so the layout tracks the on-screen
+                            keyboard instead of the static vh
+   ============================================================ */
+
+:root {
+  --tap-min: 44px;         /* iOS HIG minimum */
+  --tap-comfortable: 48px; /* Material 3 minimum */
+  --field-h: 48px;
+  --font-floor: 0.6875rem; /* 11px — legibility floor */
+}
+
+/* ─── Shell: dynamic viewport + safe areas ─── */
+
+.login-split-page {
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+           max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  min-height: 100vh;
+  min-height: 100dvh; /* tracks the visual viewport when the keyboard opens */
+}
+
+/* Signup and the other .center-screen auth pages share this shell. */
+.center-screen {
+  padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+           max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* ─── Field sizing: one rule for every auth input ─── */
+
+/* Fields with a leading icon: reserve space for the 20px glyph. */
+.login-form-box .input-with-icon input,
+.login-form-box .select-with-icon select,
+.auth-card .input-with-icon input,
+.auth-card .input-with-icon select {
+  height: var(--field-h);
+  min-height: var(--field-h);
+  font-size: 1rem; /* 16px — prevents focus zoom */
+  line-height: 1.2;
+  border-radius: 10px;
+  padding-left: 44px;
+  padding-right: var(--tap-min);
+  background-color: #fff;
+  color: #0f172a;
+}
+
+/* Bare fields. The `>` combinator keeps these from matching icon-wrapped
+   inputs, which would otherwise lose their icon padding. */
+.auth-card .input-group-custom > input,
+.auth-card .input-group-custom > select {
+  height: var(--field-h);
+  min-height: var(--field-h);
+  font-size: 1rem;
+  line-height: 1.2;
+  border-radius: 10px;
+  padding-left: 12px;
+  padding-right: 12px;
+  background-color: #fff;
+  color: #0f172a;
+}
+
+/* Placeholders must not be mistaken for real values. */
+.auth-card input::placeholder,
+.login-form-box input::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+/* ─── Tap targets ─── */
+
+/* Password reveal: 44×44 hit area centred on a 20px glyph. */
+.password-toggle-btn {
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  width: var(--tap-min);
+  height: var(--tap-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: #64748b;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.password-toggle-btn:hover,
+.password-toggle-btn:focus-visible {
+  background: #eef2f7;
+  color: #0f172a;
+  outline: none;
+}
+
+.password-toggle-btn:focus-visible {
+  box-shadow: 0 0 0 2px #2563eb;
+}
+
+/* "Forgot password?" was a ~18px text link — now a full 44px target. */
+.forgot-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-min);
+  padding: 0 4px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.forgot-link:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Checkbox row needs a 44px target, not just an 18px box. */
+.checkbox-label {
+  min-height: var(--tap-min);
+  padding: 0 4px 0 0;
+  margin: 0;
+  flex: 1;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.checkbox-label:focus-within {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ─── Submit + social targets ─── */
+
+.login-submit-btn,
+.auth-card .btn {
+  min-height: var(--tap-comfortable);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.social-btn {
+  min-height: var(--tap-comfortable);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.social-btn:focus-visible,
+.login-submit-btn:focus-visible,
+.auth-card .btn:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+/* ─── Text that was below the legibility floor ─── */
+
+.step-label,
+.strength-info {
+  font-size: var(--font-floor);
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  font-size: 0.8125rem;
+}
+
+.strength-label {
+  font-size: var(--font-floor);
+}
+
+/* Field labels: 13px reads better than 12px on a 360px panel. */
+.input-group-custom label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+/* ─── Progress tracker ─── */
+
+.progress-line {
+  min-width: 32px;
+  flex: 1;
+}
+
+.segmented .seg {
+  min-height: var(--tap-min);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9375rem;
+}
+
+.segmented {
+  margin-bottom: 20px;
+}
+
+/* ─── Error / info banners ─── */
+
+.auth-form-body .alert,
+.auth-card .alert {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  padding: 12px 14px;
+  border-radius: 10px;
+}
+
+/* ─── Footer link ─── */
+
+.login-footer-text,
+.auth-card .center {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   360px AND NARROWER
+   ============================================================ */
+@media (max-width: 380px) {
+  .login-right-panel,
+  .center-screen {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .auth-card {
+    padding: 18px 14px;
+  }
+
+  .login-heading {
+    font-size: 1.375rem;
+  }
+
+  /* Keep the two-up Year/Section pair readable but not cramped. */
+  .row {
+    gap: 10px;
+  }
+
+  .login-options {
+    gap: 10px;
+  }
+
+  .divider {
+    margin: 20px 0;
+  }
+
+  .login-footer-text {
+    margin-top: 20px;
+  }
+}
+
+/* ============================================================
+   SHORT VIEWPORTS (landscape phones, 360×640 and similar)
+   ============================================================ */
+@media (max-height: 700px) {
+  .login-split-page,
+  .center-screen {
+    align-items: flex-start;
+  }
+
+  .signup-progress {
+    margin-bottom: 14px;
+  }
+
+  .login-form-box .auth-form-body {
+    gap: 12px;
+  }
+}
+
+/* ============================================================
+   HOVER-CAPABLE DEVICES ONLY
+   Small phones have no hover, so hover styles must not apply —
+   otherwise a tap can leave a button stuck in its hover state.
+   ============================================================ */
+@media (hover: none) {
+  .social-btn:hover,
+  .btn-primary-add:hover,
+  .icon-btn:hover,
+  .demo-btn:hover,
+  .pill-btn:hover {
+    background: inherit;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

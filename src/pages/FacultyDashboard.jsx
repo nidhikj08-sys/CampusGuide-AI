@@ -1,25 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import { useAuth } from "../context/AuthContext";
 import { getFacultyClasses } from "../services/timetableService";
-
-const NOTIFICATIONS = [
-  { id: 1, type: "room-change", title: "Room Change", message: "CS501 moved to Room 302 - 2nd Floor", time: "2 min ago", action: "/faculty/request-change" },
-  { id: 2, type: "timetable", title: "Timetable Update", message: "New class added: Data Structures at 10:15 AM", time: "15 min ago", action: "/faculty/timetable" },
-  { id: 3, type: "alert", title: "System Alert", message: "QR code scan limit reached for today", time: "30 min ago", action: "/profile" },
-  { id: 4, type: "shift", title: "Shift Request", message: "Faculty requested room change for CS lab", time: "1 hour ago", action: "/faculty/request-change" },
-  { id: 5, type: "info", title: "Info", message: "Library opens at 8 AM - Don't be late!", time: "2 hours ago", action: "/student/map" },
-];
+import {
+  getNotifications,
+  getUnreadCount,
+  markAsRead,
+  markAllAsRead,
+  NOTIF_ICON,
+  timeAgo,
+} from "../services/notificationService";
 
 export default function FacultyDashboard() {
   const { profile } = useAuth();
   const facultyName = profile?.name || "Dr. Sneha";
   const facultyClasses = getFacultyClasses();
   const [activeTab, setActiveTab] = useState("cards"); // "cards" | "schedule" | "notifications"
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notifLoading, setNotifLoading] = useState(false);
+
+  const loadNotifications = useCallback(async () => {
+    setNotifLoading(true);
+    const [data, count] = await Promise.all([getNotifications(), getUnreadCount()]);
+    setNotifications(data);
+    setUnreadCount(count);
+    setNotifLoading(false);
+  }, []);
+
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  async function handleMarkRead(id) {
+    await markAsRead(id);
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, is_read: true } : n))
+    );
+    setUnreadCount((c) => Math.max(0, c - 1));
+  }
+
+  async function handleMarkAllRead() {
+    await markAllAsRead();
+    setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+    setUnreadCount(0);
+  }
 
   return (
-    <AppLayout>
+    <AppLayout
+      title="Faculty Dashboard"
+      subtitle="Your teaching schedule & updates"
+    >
       {/* Welcome Header (Matching Screen 5) */}
       <div className="dashboard-welcome-banner">
         <h1 className="greeting-text">Welcome, {facultyName}</h1>
@@ -34,7 +66,14 @@ export default function FacultyDashboard() {
             className={`faculty-tab-btn${activeTab === tab ? " active" : ""}`}
             onClick={() => setActiveTab(tab)}
           >
-            {tab === "cards" ? "Quick Cards" : tab === "schedule" ? "Timetable" : "Notifications"}
+            {tab === "cards" ? "Quick Cards" : tab === "schedule" ? "Timetable" : (
+              <span style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                Notifications
+                {unreadCount > 0 && (
+                  <span className="notif-badge">{unreadCount > 9 ? "9+" : unreadCount}</span>
+                )}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -134,28 +173,42 @@ export default function FacultyDashboard() {
         <div className="notification-panel">
           <div className="notification-header">
             <h2>Notifications</h2>
-            <span className="muted">{NOTIFICATIONS.length} new</span>
+            {unreadCount > 0 && (
+              <button className="mark-all-read-btn" onClick={handleMarkAllRead}>
+                Mark all read
+              </button>
+            )}
           </div>
 
-          <div className="notification-list">
-            {NOTIFICATIONS.map((notif) => (
-              <div key={notif.id} className="notification-item">
-                <div className={`notification-icon notif-${notif.type}`}>
-                  {notif.type === "room-change" ? "🏫" : notif.type === "timetable" ? "📅" : notif.type === "alert" ? "⚠️" : notif.type === "shift" ? "🔄" : "ℹ️"}
-                </div>
-                <div className="notification-content">
-                  <div className="notification-title">{notif.title}</div>
-                  <div className="notification-message">{notif.message}</div>
-                </div>
-                <div className="notification-time">{notif.time}</div>
-              </div>
-            ))}
-          </div>
-
-          {NOTIFICATIONS.length === 0 && (
+          {notifLoading ? (
+            <div className="empty-state"><span className="empty-icon">⏳</span><p>Loading...</p></div>
+          ) : notifications.length === 0 ? (
             <div className="empty-state">
-              <span className="empty-icon">ℹ️</span>
-              <p>No new notifications</p>
+              <span className="empty-icon">🔔</span>
+              <p>No notifications yet</p>
+            </div>
+          ) : (
+            <div className="notification-list">
+              {notifications.map((notif) => (
+                <div
+                  key={notif.id}
+                  className={`notification-item${notif.is_read ? " notif-read" : " notif-unread"}`}
+                  onClick={() => !notif.is_read && handleMarkRead(notif.id)}
+                  style={{ cursor: notif.is_read ? "default" : "pointer" }}
+                >
+                  <div className={`notification-icon notif-${notif.type}`}>
+                    {NOTIF_ICON[notif.type] ?? "ℹ️"}
+                  </div>
+                  <div className="notification-content">
+                    <div className="notification-title">
+                      {notif.title}
+                      {!notif.is_read && <span className="unread-dot" />}
+                    </div>
+                    <div className="notification-message">{notif.message}</div>
+                  </div>
+                  <div className="notification-time">{timeAgo(notif.created_at)}</div>
+                </div>
+              ))}
             </div>
           )}
         </div>

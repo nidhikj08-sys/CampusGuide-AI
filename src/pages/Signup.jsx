@@ -161,6 +161,10 @@ export default function Signup() {
               <input 
                 id="email"
                 type="email" 
+                inputMode="email"
+                autoCapitalize="off"
+                autoCorrect="off"
+                spellCheck="false"
                 value={form.email} 
                 onChange={setField("email")} 
                 placeholder="you@example.com" 
@@ -254,9 +258,11 @@ export default function Signup() {
                     id="usn"
                     value={form.usn} 
                     onChange={setField("usn")} 
-                    placeholder="e.g. 4KV24CS123" 
+                    placeholder="e.g. 4KV24CS123"
                     required 
                     autoComplete="off"
+                    autoCapitalize="characters"
+                    spellCheck="false"
                     disabled={busy}
                   />
                 </div>
@@ -295,9 +301,11 @@ export default function Signup() {
                     id="employeeId"
                     value={form.employeeId} 
                     onChange={setField("employeeId")} 
-                    placeholder="Your staff ID" 
+                    placeholder="Your staff ID"
                     required 
                     autoComplete="off"
+                    autoCapitalize="characters"
+                    spellCheck="false"
                     disabled={busy}
                   />
                 </div>

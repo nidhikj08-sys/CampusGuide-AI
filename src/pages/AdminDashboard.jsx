@@ -4,6 +4,20 @@ import AdminLayout from "../components/AdminLayout";
 import { getDashboardStats, getClassrooms } from "../services/classroomService";
 import { getScanStats } from "../services/scanLogService";
 
+const QUICK_ACTIONS = [
+  { label: "Add Room", desc: "Register new room, lab or office", icon: "plus", color: "icon-blue", href: "/admin/classrooms/new" },
+  { label: "Users", desc: "Manage students, faculty & admins", icon: "users", color: "icon-green", href: "/admin/users" },
+  { label: "Timetable", desc: "Create & manage class schedules", icon: "calendar", color: "icon-amber", href: "/admin/timetable" },
+  { label: "Notices", desc: "Post campus announcements", icon: "bell", color: "icon-purple", href: "/admin/notices" },
+];
+
+const RECENT_CHANGES = [
+  { type: "room", title: "Room 304 added", desc: "New lab on Floor 3", time: "2h ago", color: "icon-blue" },
+  { type: "user", title: "5 students enrolled", desc: "CS Batch 2024", time: "4h ago", color: "icon-green" },
+  { type: "timetable", title: "Timetable updated", desc: "Semester 5 schedule", time: "6h ago", color: "icon-amber" },
+  { type: "notice", title: "Notice posted", desc: "Library hours changed", time: "8h ago", color: "icon-purple" },
+];
+
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
     totalStudents: 120,
@@ -40,8 +54,8 @@ export default function AdminDashboard() {
       title="Admin Dashboard"
       subtitle="Manage campus, rooms & users"
     >
-      {/* 4 Metric Stats Cards */}
-      <div className="stats-grid">
+      {/* 4 Metric Stats Cards - 2x2 Grid */}
+      <div className="stats-grid stats-grid-2x2">
         <div className="stat-card blue">
           <div className="stat-icon-wrapper">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -99,11 +113,79 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Navigation Analytics */}
+      {/* Quick Actions - 2x2 Grid */}
+      <div className="dashboard-section">
+        <h2 className="section-title">Quick Actions</h2>
+        <div className="quick-actions-grid quick-actions-2x2">
+          {QUICK_ACTIONS.map((action, idx) => (
+            <Link key={idx} to={action.href} className="action-card">
+              <div className={`action-icon ${action.color}`}>
+                {action.icon === "plus" && (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="12" y1="5" x2="12" y2="19" />
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                  </svg>
+                )}
+                {action.icon === "users" && (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                  </svg>
+                )}
+                {action.icon === "calendar" && (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                )}
+                {action.icon === "bell" && (
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                  </svg>
+                )}
+              </div>
+              <span className="action-label">{action.label}</span>
+              <span className="action-desc">{action.desc}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Recent Changes / Notifications */}
+      <div className="dashboard-section">
+        <div className="section-header-flex">
+          <h2 className="section-title">Recent Changes</h2>
+          <Link to="/admin/activity" className="view-all-link">View All →</Link>
+        </div>
+        <div className="recent-changes-list">
+          {RECENT_CHANGES.map((change, idx) => (
+            <div key={idx} className="recent-change-item">
+              <div className={`recent-change-icon ${change.color}`}>
+                {change.type === "room" && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>}
+                {change.type === "user" && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>}
+                {change.type === "timetable" && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>}
+                {change.type === "notice" && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>}
+              </div>
+              <div className="recent-change-content">
+                <span className="recent-change-title">{change.title}</span>
+                <span className="recent-change-desc">{change.desc}</span>
+              </div>
+              <span className="recent-change-time">{change.time}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Navigation Analytics - Keep at Bottom */}
       {scanStats && (
         <div className="dashboard-section">
           <h2 className="section-title">Navigation Analytics</h2>
-          <div className="stats-grid four-col">
+          <div className="stats-grid stats-grid-four">
             <div className="stat-card indigo">
               <div className="stat-content">
                 <span className="stat-label">Total QR Scans</span>
@@ -163,103 +245,6 @@ export default function AdminDashboard() {
           )}
         </div>
       )}
-
-      {/* Quick Actions */}
-      <div className="dashboard-section">
-        <h2 className="section-title">Quick Actions</h2>
-        <div className="quick-actions-grid">
-          <Link to="/admin/classrooms" className="action-card">
-            <div className="action-icon icon-blue">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </div>
-            <span className="action-label">Add Classroom</span>
-            <span className="action-desc">Register rooms, labs & offices</span>
-          </Link>
-
-          <Link to="/admin/classrooms" className="action-card">
-            <div className="action-icon icon-green">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-            </div>
-            <span className="action-label">Manage Classrooms</span>
-            <span className="action-desc">View, edit, or filter 3-floor map</span>
-          </Link>
-
-          <Link to="/admin/locations" className="action-card">
-            <div className="action-icon icon-amber">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                <circle cx="12" cy="10" r="3" />
-              </svg>
-            </div>
-            <span className="action-label">Manage Locations</span>
-            <span className="action-desc">Nodes, paths & QR codes</span>
-          </Link>
-
-          <div className="action-card disabled-card" title="Coming in next phase">
-            <div className="action-icon icon-purple">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-            </div>
-            <span className="action-label">Create Timetable</span>
-            <span className="action-desc">Set period hours & allocations</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Overview Table */}
-      <div className="dashboard-section">
-        <div className="section-header-flex">
-          <h2 className="section-title">Recently Registered Classrooms</h2>
-          <Link to="/admin/classrooms" className="view-all-link">
-            View All Classrooms →
-          </Link>
-        </div>
-
-        <div className="table-card">
-          <div className="table-responsive">
-            <table className="custom-data-table">
-              <thead>
-                <tr>
-                  <th>Room</th>
-                  <th>Floor</th>
-                  <th>Type</th>
-                  <th>Capacity</th>
-                  <th>Building</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentRooms.map((room) => (
-                  <tr key={room.id}>
-                    <td data-label="Room">
-                      <span className="room-pill">Room {room.room_number}</span>
-                    </td>
-                    <td data-label="Floor">
-                      <span className="floor-badge">Floor {room.floor}</span>
-                    </td>
-                    <td data-label="Type">
-                      <span className={`type-badge type-${room.type.toLowerCase().replace(/\s+/g, "-")}`}>
-                        {room.type}
-                      </span>
-                    </td>
-                    <td data-label="Capacity">{room.capacity || 60} seats</td>
-                    <td data-label="Building" className="cell-muted">{room.building || "Main Block"}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </AdminLayout>
   );
 }

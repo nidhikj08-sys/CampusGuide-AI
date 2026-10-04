@@ -131,7 +131,7 @@ export default function ManageClassrooms() {
   return (
     <AdminLayout 
       title="Manage Classrooms" 
-      subtitle="View, register, and update academic rooms, labs, and facilities."
+      subtitle="Manage rooms, labs & facilities."
     >
       {toast.message && (
         <div className={`toast-notification ${toast.type}`}>
@@ -233,68 +233,120 @@ export default function ManageClassrooms() {
             </button>
           </div>
         ) : (
-          <div className="table-responsive">
-            <table className="custom-data-table">
-              <thead>
-                <tr>
-                  <th style={{ width: "60px" }}>ID</th>
-                  <th>Room Number</th>
-                  <th>Floor</th>
-                  <th>Type</th>
-                  <th>Capacity</th>
-                  <th>Building</th>
-                  <th style={{ width: "120px", textAlign: "right" }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredRooms.map((room, index) => (
-                  <tr key={room.id || index}>
-                    <td className="cell-id">{room.id}</td>
-                    <td className="cell-room">
-                      <span className="room-pill">Room {room.room_number}</span>
-                    </td>
-                    <td>
-                      <span className="floor-badge">Floor {room.floor}</span>
-                    </td>
-                    <td>
+          <div className="classrooms-view">
+            {/* Desktop Table */}
+            <div className="table-responsive desktop-only">
+              <table className="custom-data-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: "60px" }}>ID</th>
+                    <th>Room Number</th>
+                    <th>Floor</th>
+                    <th>Type</th>
+                    <th>Capacity</th>
+                    <th>Building</th>
+                    <th style={{ width: "120px", textAlign: "right" }}>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRooms.map((room, index) => (
+                    <tr key={room.id || index}>
+                      <td className="cell-id">{room.id}</td>
+                      <td className="cell-room">
+                        <span className="room-pill">Room {room.room_number}</span>
+                      </td>
+                      <td>
+                        <span className="floor-badge">Floor {room.floor}</span>
+                      </td>
+                      <td>
+                        <span className={`type-badge type-${room.type.toLowerCase().replace(/\s+/g, "-")}`}>
+                          {room.type}
+                        </span>
+                      </td>
+                      <td className="cell-capacity">
+                        <strong>{room.capacity || 60}</strong> seats
+                      </td>
+                      <td className="cell-muted">{room.building || "Main Block"}</td>
+                      <td style={{ textAlign: "right" }}>
+                        <div className="action-buttons">
+                          <button 
+                            className="icon-action-btn edit-btn"
+                            title="Edit Classroom"
+                            onClick={() => openEditModal(room)}
+                          >
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <path d="M12 20h9" />
+                              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                            </svg>
+                          </button>
+                          <button 
+                            className="icon-action-btn delete-btn"
+                            title="Delete Classroom"
+                            onClick={() => handleDelete(room)}
+                          >
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                              <polyline points="3 6 5 6 21 6" />
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                              <line x1="10" y1="11" x2="10" y2="17" />
+                              <line x1="14" y1="11" x2="14" y2="17" />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="classroom-cards mobile-only">
+              {filteredRooms.map((room, index) => (
+                <div key={room.id || index} className="classroom-card">
+                  <div className="classroom-card-header">
+                    <span className="room-pill">Room {room.room_number}</span>
+                    <span className="floor-badge">Floor {room.floor}</span>
+                  </div>
+                  <div className="classroom-card-body">
+                    <div className="classroom-card-row">
                       <span className={`type-badge type-${room.type.toLowerCase().replace(/\s+/g, "-")}`}>
                         {room.type}
                       </span>
-                    </td>
-                    <td className="cell-capacity">
-                      <strong>{room.capacity || 60}</strong> seats
-                    </td>
-                    <td className="cell-muted">{room.building || "Main Block"}</td>
-                    <td style={{ textAlign: "right" }}>
-                      <div className="action-buttons">
-                        <button 
-                          className="icon-action-btn edit-btn"
-                          title="Edit Classroom"
-                          onClick={() => openEditModal(room)}
-                        >
-                          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M12 20h9" />
-                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                          </svg>
-                        </button>
-                        <button 
-                          className="icon-action-btn delete-btn"
-                          title="Delete Classroom"
-                          onClick={() => handleDelete(room)}
-                        >
-                          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <polyline points="3 6 5 6 21 6" />
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-                            <line x1="10" y1="11" x2="10" y2="17" />
-                            <line x1="14" y1="11" x2="14" y2="17" />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      <span className="cell-capacity">
+                        <strong>{room.capacity || 60}</strong> seats
+                      </span>
+                    </div>
+                    <div className="classroom-card-row">
+                      <span className="cell-muted">{room.building || "Main Block"}</span>
+                    </div>
+                  </div>
+                  <div className="classroom-card-actions">
+                    <button 
+                      className="icon-action-btn edit-btn"
+                      title="Edit Classroom"
+                      onClick={() => openEditModal(room)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                      </svg>
+                    </button>
+                    <button 
+                      className="icon-action-btn delete-btn"
+                      title="Delete Classroom"
+                      onClick={() => handleDelete(room)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                        <line x1="10" y1="11" x2="10" y2="17" />
+                        <line x1="14" y1="11" x2="14" y2="17" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

@@ -210,7 +210,10 @@ export default function Profile() {
   const navigateLabel = profile.role === "faculty" ? "🗺️ Navigate to Cabin" : "🗺️ Navigate to Room";
 
   return (
-    <AppLayout>
+    <AppLayout
+      title="My Profile"
+      subtitle="Your CampusGuide account"
+    >
       <div className="profile-page-root">
         {/* ── TAB BAR ── */}
         <div className="profile-tabs-bar">
