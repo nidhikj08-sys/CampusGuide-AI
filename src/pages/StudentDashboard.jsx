@@ -142,7 +142,7 @@ export default function StudentDashboard() {
           <div className="notification-list">
             {NOTIFICATIONS.map((notif) => (
               <div key={notif.id} className="notification-item">
-                <div className="notification-icon {notif.type}">
+                <div className={`notification-icon notif-${notif.type}`}>
                   {notif.type === "room-change" ? "🏫" : notif.type === "timetable" ? "📅" : notif.type === "alert" ? "⚠️" : notif.type === "shift" ? "🔄" : "ℹ️"}
                 </div>
                 <div className="notification-content">
@@ -162,38 +162,6 @@ export default function StudentDashboard() {
           )}
         </div>
       )}
-
-      {/* Today's Classes List */}
-      <div className="schedule-panel">
-        <div className="schedule-header">
-          <h2>Today's Classes</h2>
-          <Link to="/student/timetable" className="view-all-text">View All</Link>
-        </div>
-
-        <div className="class-schedule-list">
-          {todayClasses.map((item) => (
-            <div key={item.id} className="class-schedule-item">
-              <div className="schedule-time-col">
-                <span className={`status-dot dot-${item.dot}`} />
-                <span className="time-text">{item.time}</span>
-              </div>
-              <div className="schedule-subject-col">
-                <span className="subject-title">{item.subject}</span>
-              </div>
-              <div className="schedule-room-col">
-                <Link 
-                  to={`/student/map?dest=r_${item.room}`} 
-                  className="room-tag-link"
-                  title="Navigate to this room"
-                >
-                  Room {item.room}
-                  <span className="nav-arrow">↗</span>
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </AppLayout>
   );
 }

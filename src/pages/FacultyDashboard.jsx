@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import { useAuth } from "../context/AuthContext";
@@ -139,7 +140,7 @@ export default function FacultyDashboard() {
           <div className="notification-list">
             {NOTIFICATIONS.map((notif) => (
               <div key={notif.id} className="notification-item">
-                <div className="notification-icon {notif.type}">
+                <div className={`notification-icon notif-${notif.type}`}>
                   {notif.type === "room-change" ? "🏫" : notif.type === "timetable" ? "📅" : notif.type === "alert" ? "⚠️" : notif.type === "shift" ? "🔄" : "ℹ️"}
                 </div>
                 <div className="notification-content">
@@ -159,32 +160,6 @@ export default function FacultyDashboard() {
           )}
         </div>
       )}
-
-      {/* Today's Assigned Classes */}
-      <div className="schedule-panel">
-        <div className="schedule-header">
-          <h2>Today's Classes</h2>
-          <Link to="/faculty/timetable" className="view-all-text">View All</Link>
-        </div>
-
-        <div className="class-schedule-list">
-          {facultyClasses.map((item) => (
-            <div key={item.id} className="class-schedule-item">
-              <div className="schedule-time-col">
-                <span className={`status-dot dot-${item.dot}`} />
-                <span className="time-text">{item.time}</span>
-              </div>
-              <div className="schedule-subject-col">
-                <span className="subject-title">{item.subject}</span>
-                <span className="section-subtitle">{item.section}</span>
-              </div>
-              <div className="schedule-room-col">
-                <span className="room-label-tag">Room {item.room}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </AppLayout>
   );
 }

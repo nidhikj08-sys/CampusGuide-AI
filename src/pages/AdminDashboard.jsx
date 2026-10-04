@@ -38,7 +38,7 @@ export default function AdminDashboard() {
   return (
     <AdminLayout
       title="Admin Dashboard"
-      subtitle="Manage your campus resources and oversee building allocations."
+      subtitle="Manage campus, rooms & users"
     >
       {/* 4 Metric Stats Cards */}
       <div className="stats-grid">

@@ -1983,133 +1983,7 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   }
 }
 
-/* ============================================================
-   NOTIFICATION PANEL (Student & Faculty Dashboards)
-   ============================================================ */
-.notification-panel {
-  background: #ffffff;
-  border-radius: 14px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  padding: 24px;
-}
 
-.notification-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.notification-header h2 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0;
-}
-
-.notification-header .muted {
-  font-size: 0.875rem;
-  color: #64748b;
-}
-
-.notification-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.notification-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #f8fafc;
-}
-
-.notification-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
-}
-
-.notification-icon {
-  flex-shrink: 0;
-  font-size: 1.2rem;
-  line-height: 1;
-}
-
-.notification-content {
-  flex: 1;
-}
-
-.notification-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #0f172a;
-  margin-bottom: 4px;
-}
-
-.notification-message {
-  font-size: 0.875rem;
-  color: #64748b;
-  line-height: 1.4;
-}
-
-.notification-time {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  margin-left: auto;
-}
-
-.empty-state {
-  padding: 40px 24px;
-  text-align: center;
-}
-
-.empty-icon {
-  font-size: 2rem;
-  margin-bottom: 12px;
-  color: #cbd5e1;
-}
-
-.empty-state p {
-  color: #64748b;
-  margin: 8px 0 0;
-}
-
-/* Tab bars */
-.student-tab-bar,
-.faculty-tab-bar {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.student-tab-bar button,
-.faculty-tab-bar button {
-  padding: 8px 16px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #64748b;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.student-tab-bar button.active,
-.faculty-tab-bar button.active {
-  color: #3b6cf6;
-}
-
-.student-tab-bar button:hover:not(.active),
-.faculty-tab-bar button:hover:not(.active) {
-  color: #2563eb;
-}
 
 /* ============================================================
    SCREEN 2 & 5: DASHBOARD ACTION CARDS & SCHEDULE
@@ -3332,48 +3206,52 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 }
 
 /* ============================================================
-   NOTIFICATION PANEL (Student & Faculty Dashboards)
+   SCREEN 2 & 5: DASHBOARD ACTION CARDS & SCHEDULE
+   ============================================================ */
+
+/* ============================================================
+   NOTIFICATIONS + DASHBOARD TAB BARS
    ============================================================ */
 .notification-panel {
   background: #ffffff;
   border-radius: 14px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-  padding: 24px;
+  padding: 20px;
 }
 
 .notification-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
   border-bottom: 1px solid #f1f5f9;
 }
 
 .notification-header h2 {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
 }
 
 .notification-header .muted {
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: #64748b;
+  margin: 0;
 }
 
 .notification-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
 .notification-item {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding-bottom: 12px;
+  padding: 14px 0;
   border-bottom: 1px solid #f8fafc;
 }
 
@@ -3384,31 +3262,45 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 
 .notification-icon {
   flex-shrink: 0;
-  font-size: 1.2rem;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
   line-height: 1;
+  border-radius: 10px;
 }
+
+.notif-room-change { background: #eff6ff; }
+.notif-timetable { background: #f0fdf4; }
+.notif-alert { background: #fef2f2; }
+.notif-shift { background: #faf5ff; }
+.notif-info { background: #f1f5f9; }
 
 .notification-content {
   flex: 1;
+  min-width: 0;
 }
 
 .notification-title {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #0f172a;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .notification-message {
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   color: #64748b;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .notification-time {
-  font-size: 0.75rem;
+  flex-shrink: 0;
+  font-size: 0.72rem;
   color: #94a3b8;
-  margin-left: auto;
+  white-space: nowrap;
 }
 
 .empty-state {
@@ -3418,49 +3310,752 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 
 .empty-icon {
   font-size: 2rem;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: #cbd5e1;
 }
 
 .empty-state p {
   color: #64748b;
-  margin: 8px 0 0;
+  margin: 0;
 }
 
-/* Tab bars */
+/* Dashboard tab bars (segmented pill style) */
 .student-tab-bar,
 .faculty-tab-bar {
   display: flex;
-  gap: 12px;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #e2e8f0;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 20px;
+  background: #eef1f6;
+  border-radius: 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .student-tab-bar button,
 .faculty-tab-bar button {
-  padding: 8px 16px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  flex: 1;
+  min-width: max-content;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
   color: #64748b;
   background: transparent;
-  border: none;
+  border: 0;
+  border-radius: 9px;
   cursor: pointer;
-  transition: color 0.2s;
+  white-space: nowrap;
+  transition: all 0.2s ease;
 }
 
 .student-tab-bar button.active,
 .faculty-tab-bar button.active {
-  color: #3b6cf6;
-}
-
-.student-tab-bar button:hover:not(.active),
-.faculty-tab-bar button:hover:not(.active) {
+  background: #ffffff;
   color: #2563eb;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* ============================================================
-   SCREEN 2 & 5: DASHBOARD ACTION CARDS & SCHEDULE
+   MOBILE-FIRST COMPLEMENTS
+   Indoor Map · QR Scanner · Manage Locations
    ============================================================ */
+.text-muted {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.mobile-nav {
+  padding-bottom: 24px;
+}
+
+/* ─── Indoor Map: route controls ─── */
+.select-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.select-col label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 5px;
+}
+
+.select-col select {
+  height: 44px;
+  font-size: 0.9rem;
+  border-radius: 10px;
+}
+
+.btn-show-route,
+.btn-qr-scan {
+  height: 46px;
+  border: 0;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-show-route {
+  flex: 1;
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+}
+
+.btn-show-route:hover { background: #1d4ed8; }
+
+.btn-qr-scan {
+  width: 46px;
+  flex-shrink: 0;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.btn-qr-scan:hover { background: #1e293b; }
+
+/* ─── Accessibility toggle ─── */
+.accessibility-toggle {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+}
+
+.toggle-label input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 42px;
+  height: 24px;
+  flex-shrink: 0;
+  background: #cbd5e1;
+  border-radius: 999px;
+  transition: background 0.25s ease;
+}
+
+.toggle-switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.25s ease;
+}
+
+.toggle-label input:checked + .toggle-switch { background: #16a34a; }
+.toggle-label input:checked + .toggle-switch::after { transform: translateX(18px); }
+.toggle-label input:focus-visible + .toggle-switch {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.toggle-text {
+  font-weight: 600;
+  color: #334155;
+}
+
+/* ─── Route metrics ─── */
+.route-info-banner {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 12px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+}
+
+.route-metric {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.metric-label {
+  display: block;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 3px;
+}
+
+.metric-value {
+  display: block;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+.algo-badge {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #7c3aed;
+  background: #f3e8ff;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* ─── Directions ─── */
+.directions-card {
+  margin-top: 16px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.directions-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 14px;
+}
+
+.directions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.direction-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.step-number {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.step-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.step-route {
+  display: block;
+  font-size: 0.87rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* ─── Floor switcher ─── */
+.map-floor-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.floor-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.floor-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.floor-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.floor-dot {
+  width: 40px;
+  height: 36px;
+  border-radius: 9px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #475569;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.floor-dot.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.3);
+}
+
+/* ─── Blueprint canvas ─── */
+.indoor-svg-blueprint {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.map-node {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.map-node.selected {
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.85));
+}
+
+.pulse-pin {
+  transform-origin: center;
+  animation: pulsePin 1.6s ease-in-out infinite;
+}
+
+@keyframes pulsePin {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.7); opacity: 0.25; }
+}
+
+/* ============================================================
+   QR SCANNER MODAL
+   ============================================================ */
+.scanner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(2, 6, 23, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(3px);
+  animation: fadeInOverlay 0.2s ease;
+}
+
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.scanner-modal {
+  width: 100%;
+  max-width: 420px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 18px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+  animation: modalPop 0.22s ease-out;
+}
+
+.scanner-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid #1e293b;
+}
+
+.scanner-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.scanner-header .modal-close-btn {
+  color: #94a3b8;
+}
+
+.scanner-header .modal-close-btn:hover {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+.scanner-body {
+  padding: 18px;
+}
+
+.scanner-error {
+  padding: 12px;
+  margin-bottom: 14px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 10px;
+  color: #fca5a5;
+  font-size: 0.84rem;
+}
+
+.qr-video {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 12px;
+  background: #000000;
+  display: block;
+}
+
+/* Viewfinder reticle overlays the video */
+.scanner-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin-top: -100%;
+  pointer-events: none;
+}
+
+.scanner-frame::before {
+  content: "";
+  position: absolute;
+  inset: 12%;
+  border: 3px solid rgba(59, 130, 246, 0.9);
+  border-radius: 16px;
+  box-shadow: 0 0 0 100vmax rgba(2, 6, 23, 0.45);
+  animation: scanSweep 2.2s ease-in-out infinite;
+}
+
+@keyframes scanSweep {
+  0%, 100% { transform: translateY(0); opacity: 0.9; }
+  50% { transform: translateY(6%); opacity: 1; }
+}
+
+/* ============================================================
+   MANAGE LOCATIONS
+   ============================================================ */
+.action-buttons-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.locations-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.location-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.location-card.selected {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+.location-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.location-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #eff6ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.location-info {
+  min-width: 0;
+}
+
+.location-info > div:first-child {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.location-meta {
+  display: block;
+  font-size: 0.74rem;
+  color: #64748b;
+  margin-top: 2px;
+  text-transform: capitalize;
+}
+
+.floor-badge-sm {
+  flex-shrink: 0;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 6px;
+}
+
+.location-card-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-btn.qr-btn { color: #7c3aed; }
+.icon-btn.qr-btn:hover { background: #f3e8ff; border-color: #e9d5ff; }
+.icon-btn.edit-btn { color: #2563eb; }
+.icon-btn.edit-btn:hover { background: #eff6ff; border-color: #bfdbfe; }
+.icon-btn.delete-btn { color: #ef4444; }
+.icon-btn.delete-btn:hover { background: #fef2f2; border-color: #fecaca; }
+
+/* Edges / paths */
+.edges-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.edge-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.edge-route {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.edge-node-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.edge-arrow {
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.edge-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.edge-weight {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* QR preview modal */
+.modal-dialog.qr-modal {
+  max-width: 380px;
+}
+
+.qr-preview-body {
+  text-align: center;
+}
+
+.qr-preview-img {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  margin-bottom: 14px;
+}
+
+.qr-url-text {
+  font-size: 0.74rem;
+  color: #64748b;
+  word-break: break-all;
+  margin: 0 0 16px;
+  padding: 8px;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+/* Modal checkbox row */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+}
+
+/* ============================================================
+   RESPONSIVE — NEW COMPONENTS
+   ============================================================ */
+@media (max-width: 640px) {
+  .select-col {
+    flex-basis: 100%;
+  }
+
+  .route-info-banner {
+    flex-wrap: wrap;
+  }
+
+  .route-metric {
+    flex-basis: 45%;
+  }
+
+  .floor-dots {
+    flex: 1;
+  }
+
+  .floor-dot {
+    flex: 1;
+    width: auto;
+    height: 42px;
+  }
+
+  .location-card {
+    flex-wrap: wrap;
+  }
+
+  .location-card-actions {
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 8px;
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .edge-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .edge-meta {
+    justify-content: space-between;
+  }
+
+  .scanner-modal {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 16px;
+  }
+
+  .section-toolbar .btn-primary-add,
+  .section-toolbar .btn {
+    flex: 1;
+    min-width: 140px;
+  }
+}
+
+@media (max-width: 400px) {
+  .notification-item {
+    flex-wrap: wrap;
+  }
+
+  .notification-time {
+    width: 100%;
+    text-align: right;
+  }
+
+  .student-tab-bar button,
+  .faculty-tab-bar button {
+    font-size: 0.78rem;
+    padding: 9px 10px;
+  }
+
+  .route-metric {
+    flex-basis: 100%;
+  }
+}
 
 
