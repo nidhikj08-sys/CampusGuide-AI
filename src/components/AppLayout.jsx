@@ -119,38 +119,46 @@ export default function AppLayout({ children, title, subtitle }) {
       <div className="admin-main">
         {/* Header Bar */}
         <header className="admin-header">
-          <div className="header-left">
-            <button 
-              className="menu-toggle-btn"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              aria-label="Toggle menu"
-            >
-              <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none">
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </svg>
-            </button>
-            <div>
-              {title && <h1 className="header-title">{title}</h1>}
-              {subtitle && <p className="header-subtitle">{subtitle}</p>}
+          {/* Row 1: hamburger (left) + avatar pill (right) */}
+          <div className="header-top-row">
+            <div className="header-left">
+              <button
+                className="menu-toggle-btn"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                aria-label="Toggle menu"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" fill="none">
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="6" x2="21" y2="6" />
+                  <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="header-right">
+              <Link to="/profile" className="admin-user-pill">
+                <div className="admin-avatar">
+                  {profile?.avatar_url
+                    ? <img src={profile.avatar_url} alt="avatar" className="admin-avatar-photo" />
+                    : displayName.charAt(0).toUpperCase()
+                  }
+                </div>
+                <div className="admin-user-info">
+                  <span className="user-name">{displayName}</span>
+                </div>
+              </Link>
             </div>
           </div>
 
-          <div className="header-right">
-            <Link to="/profile" className="admin-user-pill">
-              <div className="admin-avatar">
-                {profile?.avatar_url
-                  ? <img src={profile.avatar_url} alt="avatar" className="admin-avatar-photo" />
-                  : displayName.charAt(0).toUpperCase()
-                }
-              </div>
-              <div className="admin-user-info">
-                <span className="user-name">{displayName}</span>
-              </div>
-            </Link>
-          </div>
+          {/* Row 2: page title + subtitle */}
+          {(title || subtitle) && (
+            <div className="header-title-block">
+              {title && <h1 className="header-title">{title}</h1>}
+              {subtitle && <p className="header-subtitle">{subtitle}</p>}
+            </div>
+          )}
         </header>
+
 
         {/* Main Content */}
         <main className="admin-content with-bottom-nav">

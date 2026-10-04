@@ -202,22 +202,37 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 }
 
 .admin-header {
-  height: 72px;
+  height: auto;
+  min-height: 64px;
   background: #ffffff;
   border-bottom: 1px solid #e2e8f0;
-  padding: 0 32px;
+  padding: 10px 32px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
   position: sticky;
   top: 0;
   z-index: 50;
+  gap: 2px;
+}
+
+/* Row 1 wrapper: hamburger left + avatar right */
+.header-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Row 2: title + subtitle */
+.header-title-block {
+  padding-left: 2px;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .menu-toggle-btn {
@@ -1130,12 +1145,90 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
     display: inline-flex;
   }
 
+  /* ── Mobile header: 2-row compact layout ── */
   .admin-header {
-    padding: 0 16px;
+    height: auto;
+    padding: 8px 12px 6px 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    min-height: 56px;
+  }
+
+  /* Row 1: hamburger on left, avatar pill on right */
+  .header-left {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  /* Row 1 wrapper: hamburger left + avatar right */
+  .header-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+  }
+
+  /* Row 2: title+subtitle pushed under row 1, indented */
+  .header-title-block {
+    padding-left: 0;
+    padding-top: 2px;
+  }
+
+  .header-title {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 220px;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .header-subtitle {
+    font-size: 0.68rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
+    line-height: 1.2;
+    color: #64748b;
+    margin: 0;
+  }
+
+  /* Move avatar pill to sit beside the hamburger on row 1 */
+  .header-right {
+    position: static;
+    align-self: flex-end;
+  }
+
+  /* Compact avatar pill for 360px */
+  .admin-user-pill {
+    padding: 3px 8px 3px 3px;
+    gap: 5px;
+  }
+
+  .admin-user-info .user-name {
+    font-size: 0.68rem;
+    max-width: 65px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .admin-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
   }
 
   .admin-content {
-    padding: 16px;
+    padding: 14px 12px;
   }
 }
 
