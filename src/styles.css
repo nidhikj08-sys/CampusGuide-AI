@@ -441,6 +441,72 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 .icon-amber { background: #fef3c7; color: #d97706; }
 .icon-purple { background: #f3e8ff; color: #9333ea; }
 
+.stats-grid.four-col {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@media (max-width: 640px) {
+  .stats-grid.four-col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .stats-grid.four-col .stat-card {
+    padding: 12px 8px;
+    gap: 8px;
+  }
+  
+  .stats-grid.four-col .stat-icon-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .stats-grid.four-col .stat-label {
+    font-size: 0.65rem;
+  }
+  
+  .stats-grid.four-col .stat-number {
+    font-size: 1.1rem;
+  }
+
+  .analytics-card {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .analytics-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .analytics-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background: #f8fafc;
+    border-radius: 8px;
+  }
+  
+  .analytics-rank {
+    font-size: 0.7rem;
+    min-width: 28px;
+    color: #2563eb;
+    font-weight: 700;
+  }
+  
+  .analytics-name {
+    font-size: 0.8rem;
+    flex: 1;
+  }
+  
+  .analytics-count {
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+}
+
 .action-label {
   font-size: 1rem;
   font-weight: 600;
@@ -1828,6 +1894,31 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   
   .analytics-count {
     font-size: 0.75rem;
+  }
+  
+  /* Admin dashboard sections mobile */
+  .admin-content {
+    padding: 16px !important;
+  }
+  
+  .dashboard-section {
+    margin-bottom: 20px;
+  }
+  
+  .section-title {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+  
+  .section-header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  
+  .view-all-link {
+    font-size: 0.8rem;
   }
   
   /* Admin sidebar header */
