@@ -1,0 +1,5 @@
+from_node,to_node,from_floor,to_floor,connection,accessible,connects_rooms
+f1_stairs,f2_stairs,1,2,stairs,no,
+f2_stairs,f3_stairs,2,3,stairs,no,
+f1_elevator,f2_elevator,1,2,elevator,yes,
+f2_elevator,f3_elevator,2,3,elevator,yes,

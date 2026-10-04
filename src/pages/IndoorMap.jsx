@@ -3,10 +3,13 @@ import { Link, useSearchParams } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import { getCampusMapGraph } from "../services/navigationGraph";
 import { recordScan } from "../services/scanLogService";
+import { unitsToMeters } from "../config/buildingSpec";
 
 export default function IndoorMap() {
   const [searchParams] = useSearchParams();
-  const graph = getCampusMapGraph();
+
+  const [graph, setGraph] = useState(null);
+  const [graphError, setGraphError] = useState("");
 
   const [fromNode, setFromNode] = useState("f1_entrance");
   const [toNode, setToNode] = useState("r_101");
@@ -21,24 +24,29 @@ export default function IndoorMap() {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
 
+  // The graph now reads admin-editable data, which is loaded asynchronously.
   useEffect(() => {
-    const dest = searchParams.get("dest");
-    const fromParam = searchParams.get("from");
-    if (dest && graph.nodes.has(dest)) {
-      setToNode(dest);
-      calculateRoute(fromParam && graph.nodes.has(fromParam) ? fromParam : "f1_entrance", dest);
-    } else {
-      calculateRoute("f1_entrance", "r_101");
-    }
-  }, [searchParams]);
+    let cancelled = false;
+    getCampusMapGraph()
+      .then((g) => {
+        if (!cancelled) setGraph(g);
+      })
+      .catch((err) => {
+        console.error("Could not load campus graph:", err);
+        if (!cancelled) setGraphError("Could not load the campus map.");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function calculateRoute(start, end) {
-    let path = graph.findShortestPath(start, end);
-    
-    if (accessibleOnly && path.length > 1) {
-      path = graph.findAccessiblePath(start, end) || path;
-    }
-    
+    if (!graph) return;
+
+    const path = accessibleOnly
+      ? graph.findAccessiblePath(start, end)
+      : graph.findShortestPath(start, end);
+
     setRoutePath(path);
 
     if (path.length > 1) {
@@ -47,9 +55,9 @@ export default function IndoorMap() {
       for (let i = 0; i < path.length - 1; i++) {
         const dx = path[i + 1].x - path[i].x;
         const dy = path[i + 1].y - path[i].y;
-        const seg = Math.round(Math.hypot(dx, dy) * 0.25);
+        const seg = Math.round(unitsToMeters(Math.hypot(dx, dy)));
         totalMeters += seg;
-        
+
         const edge = graph.getEdge(path[i].id, path[i + 1].id);
         if (edge && (edge.accessibility === "lift" || edge.accessibility === "ramp")) {
           steps.push({ action: `Use ${edge.accessibility === "lift" ? "elevator" : "ramp"}`, from: path[i].label, to: path[i + 1].label });
@@ -71,6 +79,20 @@ export default function IndoorMap() {
       setDirections([]);
     }
   }
+
+  // Initial route once the graph and any ?dest=/?from= params are both ready.
+  useEffect(() => {
+    if (!graph) return;
+
+    const dest = searchParams.get("dest");
+    const fromParam = searchParams.get("from");
+    const start = fromParam && graph.nodes.has(fromParam) ? fromParam : "f1_entrance";
+    const end = dest && graph.nodes.has(dest) ? dest : "r_101";
+
+    setToNode(end);
+    calculateRoute(start, end);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [graph, searchParams]);
 
   function handleShowRoute() {
     calculateRoute(fromNode, toNode);
@@ -135,6 +157,8 @@ export default function IndoorMap() {
   }
 
   function handleQRResult(text) {
+    if (!graph) return;
+
     try {
       const url = new URL(text);
       const from = url.searchParams.get("from");
@@ -160,6 +184,33 @@ export default function IndoorMap() {
   useEffect(() => {
     return () => stopQRScanner();
   }, []);
+
+  if (graphError) {
+    return (
+      <AppLayout>
+        <div className="center-screen">
+          <div className="card" style={{ textAlign: "center", maxWidth: 420 }}>
+            <h2>Map unavailable</h2>
+            <p className="muted">{graphError}</p>
+            <button className="btn" onClick={() => window.location.reload()}>Retry</button>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (!graph) {
+    return (
+      <AppLayout>
+        <div className="center-screen">
+          <div className="loading-state">
+            <div className="spinner" />
+            <p className="muted">Loading campus map…</p>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   const startCoords = graph.nodes.get(fromNode);
   const endCoords = graph.nodes.get(toNode);

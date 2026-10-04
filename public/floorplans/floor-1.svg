@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 480" width="560" height="480" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+  <title>Main Block — Ground Floor (Floor 1) Reference Plan</title>
+  <desc>KVG College of Engineering Main Block. Scale 15 units = 1 metre. Blueprint 560 x 480 units = 37.3m x 32.0m.</desc>
+
+  <defs>
+    <pattern id="grid" width="15" height="15" patternUnits="userSpaceOnUse">
+      <path d="M15 0 L0 0 0 15" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+    </pattern>
+    <pattern id="hatch-stairs" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#b45309" stroke-width="2.5" opacity="0.5"/>
+    </pattern>
+  </defs>
+
+  <rect width="560" height="480" fill="#f8fafc"/>
+  <rect x="20" y="20" width="520" height="440" fill="url(#grid)"/>
+
+  <!-- ============ CORRIDORS ============ -->
+  <g id="corridors">
+    <!-- central spine -->
+    <rect x="240" y="150" width="80" height="190" fill="#e2e8f0"/>
+    <!-- west arm to c_left (100,280) -->
+    <rect x="60" y="260" width="180" height="40" fill="#e2e8f0"/>
+    <!-- east arm to c_right (460,170) -->
+    <rect x="320" y="150" width="180" height="40" fill="#e2e8f0"/>
+  </g>
+
+  <!-- ============ ROOMS ============ -->
+  <g id="rooms" stroke="#2563eb" stroke-width="2" fill="#eff6ff">
+    <rect x="45"  y="55"  width="110" height="90" rx="2"/>
+    <rect x="165" y="55"  width="110" height="90" rx="2"/>
+    <rect x="285" y="55"  width="110" height="90" rx="2"/>
+    <rect x="405" y="55"  width="110" height="90" rx="2"/>
+    <rect x="45"  y="315" width="110" height="90" rx="2"/>
+    <rect x="165" y="315" width="110" height="90" rx="2"/>
+    <rect x="285" y="315" width="110" height="90" rx="2"/>
+  </g>
+  <g id="room-labels" fill="#1e3a8a" font-size="15" font-weight="700" text-anchor="middle">
+    <text x="100" y="97">101</text>
+    <text x="220" y="97">102</text>
+    <text x="340" y="97">103</text>
+    <text x="460" y="97">104</text>
+    <text x="100" y="357">105</text>
+    <text x="220" y="357">106</text>
+    <text x="340" y="357">107</text>
+  </g>
+  <g id="room-types" fill="#64748b" font-size="10" text-anchor="middle">
+    <text x="100" y="113">Classroom</text>
+    <text x="220" y="113">Classroom</text>
+    <text x="340" y="113">Office</text>
+    <text x="460" y="113">Lab</text>
+    <text x="100" y="373">Classroom</text>
+    <text x="220" y="373">Classroom</text>
+    <text x="340" y="373">Classroom</text>
+  </g>
+
+  <!-- ============ VERTICAL CORES ============ -->
+  <!-- stairs (100,240) -->
+  <g id="stairs">
+    <rect x="55" y="212" width="90" height="44" fill="#fef3c7" stroke="#b45309" stroke-width="2" rx="2"/>
+    <rect x="60" y="217" width="80" height="34" fill="url(#hatch-stairs)"/>
+    <text x="100" y="234" fill="#92400e" font-size="10" font-weight="700" text-anchor="middle">STAIRS</text>
+  </g>
+  <!-- elevator (460,240) -->
+  <g id="elevator">
+    <rect x="415" y="212" width="90" height="56" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" rx="2"/>
+    <text x="460" y="236" fill="#5b21b6" font-size="10" font-weight="700" text-anchor="middle">LIFT</text>
+    <text x="460" y="250" fill="#5b21b6" font-size="8" text-anchor="middle">100-120kg</text>
+  </g>
+
+  <!-- ============ ENTRANCE ============ -->
+  <g id="entrance">
+    <rect x="30" y="415" width="150" height="45" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="2"/>
+    <text x="105" y="436" fill="#15803d" font-size="12" font-weight="700" text-anchor="middle">MAIN ENTRANCE</text>
+    <text x="105" y="451" fill="#15803d" font-size="9" text-anchor="middle">Ground floor only</text>
+  </g>
+
+  <!-- ============ SHELL ============ -->
+  <rect x="20" y="20" width="520" height="440" fill="none" stroke="#0f172a" stroke-width="6"/>
+  <!-- entrance opening -->
+  <line x1="30" y1="462" x2="120" y2="462" stroke="#f8fafc" stroke-width="8"/>
+  <line x1="30" y1="465" x2="120" y2="465" stroke="#16a34a" stroke-width="3"/>
+
+  <!-- ============ ANNOTATION ============ -->
+  <g id="scale-bar">
+    <line x1="30" y1="34" x2="180" y2="34" stroke="#0f172a" stroke-width="3"/>
+    <line x1="30" y1="28" x2="30" y2="40" stroke="#0f172a" stroke-width="3"/>
+    <line x1="105" y1="30" x2="105" y2="38" stroke="#0f172a" stroke-width="2"/>
+    <line x1="180" y1="28" x2="180" y2="40" stroke="#0f172a" stroke-width="3"/>
+    <text x="30" y="24" fill="#475569" font-size="9" font-weight="600">0</text>
+    <text x="105" y="24" fill="#475569" font-size="9" font-weight="600" text-anchor="middle">5m</text>
+    <text x="182" y="24" fill="#475569" font-size="9" font-weight="600">10m</text>
+  </g>
+
+  <g id="north-arrow" transform="translate(510,50)">
+    <path d="M0 -18 L7 8 L0 3 L-7 8 Z" fill="#0f172a"/>
+    <text x="0" y="22" fill="#0f172a" font-size="10" font-weight="700" text-anchor="middle">N</text>
+  </g>
+
+  <text x="20" y="474" fill="#64748b" font-size="9">Main Block · Ground Floor · Scale 15 units = 1 m · Blueprint 37.3m × 32.0m</text>
+</svg>

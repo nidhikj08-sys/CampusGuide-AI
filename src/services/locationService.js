@@ -1,178 +1,297 @@
-import { supabase } from "../supabase";
+import {
+  buildReferenceBuildingData,
+  VERTICAL_CONNECTIONS,
+  FLOOR_PLANS,
+} from "../data/referenceBuilding";
 
 const LOCAL_KEY = "campusguide_locations_data";
 
-const DEFAULT_NODES = [
-  { id: "f1_entrance", label: "Main Entrance", floor: 1, x: 60, y: 400, isRoom: true, type: "entrance" },
-  { id: "f1_stairs", label: "Stairs F1", floor: 1, x: 100, y: 240, isRoom: true, type: "stairs" },
-  { id: "f1_elevator", label: "Elevator F1", floor: 1, x: 460, y: 240, isRoom: true, type: "elevator" },
-  { id: "r_101", label: "Room 101", floor: 1, x: 100, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_102", label: "Room 102", floor: 1, x: 220, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_103", label: "Room 103", floor: 1, x: 340, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_104", label: "Room 104", floor: 1, x: 460, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_105", label: "Room 105", floor: 1, x: 100, y: 360, isRoom: true, type: "classroom" },
-  { id: "r_106", label: "Room 106", floor: 1, x: 220, y: 360, isRoom: true, type: "classroom" },
-  { id: "r_107", label: "Room 107", floor: 1, x: 340, y: 360, isRoom: true, type: "classroom" },
-  { id: "f1_c_top", label: "Corridor Top", floor: 1, x: 280, y: 170, isRoom: false, type: "corridor" },
-  { id: "f1_c_mid", label: "Corridor Mid", floor: 1, x: 280, y: 240, isRoom: false, type: "corridor" },
-  { id: "f1_c_bot", label: "Corridor Bot", floor: 1, x: 280, y: 320, isRoom: false, type: "corridor" },
-  { id: "f1_c_left", label: "Corridor Left", floor: 1, x: 100, y: 280, isRoom: false, type: "corridor" },
-  { id: "f1_c_right", label: "Corridor Right", floor: 1, x: 460, y: 170, isRoom: false, type: "corridor" },
-  { id: "f2_stairs", label: "Stairs F2", floor: 2, x: 100, y: 240, isRoom: true, type: "stairs" },
-  { id: "f2_elevator", label: "Elevator F2", floor: 2, x: 460, y: 240, isRoom: true, type: "elevator" },
-  { id: "r_201", label: "Room 201", floor: 2, x: 100, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_202", label: "Room 202", floor: 2, x: 220, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_203", label: "Room 203", floor: 2, x: 340, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_204", label: "Room 204", floor: 2, x: 460, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_205", label: "Room 205", floor: 2, x: 100, y: 360, isRoom: true, type: "classroom" },
-  { id: "r_206", label: "Room 206", floor: 2, x: 220, y: 360, isRoom: true, type: "classroom" },
-  { id: "r_207", label: "Room 207", floor: 2, x: 340, y: 360, isRoom: true, type: "classroom" },
-  { id: "r_208", label: "Room 208", floor: 2, x: 460, y: 360, isRoom: true, type: "classroom" },
-  { id: "f2_c_top", label: "Corridor Top", floor: 2, x: 280, y: 170, isRoom: false, type: "corridor" },
-  { id: "f2_c_mid", label: "Corridor Mid", floor: 2, x: 280, y: 240, isRoom: false, type: "corridor" },
-  { id: "f2_c_bot", label: "Corridor Bot", floor: 2, x: 280, y: 320, isRoom: false, type: "corridor" },
-  { id: "f2_c_left", label: "Corridor Left", floor: 2, x: 100, y: 280, isRoom: false, type: "corridor" },
-  { id: "f2_c_right", label: "Corridor Right", floor: 2, x: 460, y: 170, isRoom: false, type: "corridor" },
-  { id: "f3_stairs", label: "Stairs F3", floor: 3, x: 100, y: 240, isRoom: true, type: "stairs" },
-  { id: "f3_elevator", label: "Elevator F3", floor: 3, x: 460, y: 240, isRoom: true, type: "elevator" },
-  { id: "r_301", label: "Room 301", floor: 3, x: 100, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_302", label: "Room 302", floor: 3, x: 220, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_303", label: "Room 303", floor: 3, x: 340, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_304", label: "Room 304", floor: 3, x: 460, y: 100, isRoom: true, type: "classroom" },
-  { id: "r_305", label: "Room 305", floor: 3, x: 100, y: 360, isRoom: true, type: "classroom" },
-  { id: "r_306", label: "Room 306", floor: 3, x: 220, y: 360, isRoom: true, type: "classroom" },
-  { id: "r_307", label: "Room 307", floor: 3, x: 340, y: 360, isRoom: true, type: "classroom" },
-  { id: "r_308", label: "Room 308", floor: 3, x: 460, y: 360, isRoom: true, type: "classroom" },
-  { id: "f3_c_top", label: "Corridor Top", floor: 3, x: 280, y: 170, isRoom: false, type: "corridor" },
-  { id: "f3_c_mid", label: "Corridor Mid", floor: 3, x: 280, y: 240, isRoom: false, type: "corridor" },
-  { id: "f3_c_bot", label: "Corridor Bot", floor: 3, x: 280, y: 320, isRoom: false, type: "corridor" },
-  { id: "f3_c_left", label: "Corridor Left", floor: 3, x: 100, y: 280, isRoom: false, type: "corridor" },
-  { id: "f3_c_right", label: "Corridor Right", floor: 3, x: 460, y: 170, isRoom: false, type: "corridor" },
-];
+/* ──────────────────────────────────────────────
+   Persistence
+   ────────────────────────────────────────────── */
 
-const DEFAULT_EDGES = [
-  { id: "e1", from: "f1_entrance", to: "f1_c_left", weight: 5 },
-  { id: "e2", from: "f1_stairs", to: "f1_c_left", weight: 3 },
-  { id: "e3", from: "f1_elevator", to: "f1_c_right", weight: 3 },
-  { id: "e4", from: "r_101", to: "f1_c_left", weight: 4 },
-  { id: "e5", from: "r_102", to: "f1_c_top", weight: 4 },
-  { id: "e6", from: "r_103", to: "f1_c_top", weight: 4 },
-  { id: "e7", from: "r_104", to: "f1_c_right", weight: 4 },
-  { id: "e8", from: "r_105", to: "f1_c_bot", weight: 4 },
-  { id: "e9", from: "r_106", to: "f1_c_bot", weight: 4 },
-  { id: "e10", from: "r_107", to: "f1_c_bot", weight: 4 },
-  { id: "e11", from: "f1_c_top", to: "f1_c_mid", weight: 8 },
-  { id: "e12", from: "f1_c_mid", to: "f1_c_bot", weight: 8 },
-  { id: "e13", from: "f1_c_left", to: "f1_c_mid", weight: 10 },
-  { id: "e14", from: "f1_c_mid", to: "f1_c_right", weight: 10 },
-  { id: "e15", from: "f1_stairs", to: "f2_stairs", weight: 3 },
-  { id: "e16", from: "f1_elevator", to: "f2_elevator", weight: 3 },
-  { id: "e17", from: "f2_stairs", to: "f2_c_left", weight: 3 },
-  { id: "e18", from: "f2_elevator", to: "f2_c_right", weight: 3 },
-  { id: "e19", from: "r_201", to: "f2_c_left", weight: 4 },
-  { id: "e20", from: "r_202", to: "f2_c_top", weight: 4 },
-  { id: "e21", from: "r_203", to: "f2_c_top", weight: 4 },
-  { id: "e22", from: "r_204", to: "f2_c_right", weight: 4 },
-  { id: "e23", from: "r_205", to: "f2_c_bot", weight: 4 },
-  { id: "e24", from: "r_206", to: "f2_c_bot", weight: 4 },
-  { id: "e25", from: "r_207", to: "f2_c_bot", weight: 4 },
-  { id: "e26", from: "r_208", to: "f2_c_bot", weight: 4 },
-  { id: "e27", from: "f2_c_top", to: "f2_c_mid", weight: 8 },
-  { id: "e28", from: "f2_c_mid", to: "f2_c_bot", weight: 8 },
-  { id: "e29", from: "f2_c_left", to: "f2_c_mid", weight: 10 },
-  { id: "e30", from: "f2_c_mid", to: "f2_c_right", weight: 10 },
-  { id: "e31", from: "f2_stairs", to: "f3_stairs", weight: 3 },
-  { id: "e32", from: "f2_elevator", to: "f3_elevator", weight: 3 },
-  { id: "e33", from: "f3_stairs", to: "f3_c_left", weight: 3 },
-  { id: "e34", from: "f3_elevator", to: "f3_c_right", weight: 3 },
-  { id: "e35", from: "r_301", to: "f3_c_left", weight: 4 },
-  { id: "e36", from: "r_302", to: "f3_c_top", weight: 4 },
-  { id: "e37", from: "r_303", to: "f3_c_top", weight: 4 },
-  { id: "e38", from: "r_304", to: "f3_c_right", weight: 4 },
-  { id: "e39", from: "r_305", to: "f3_c_bot", weight: 4 },
-  { id: "e40", from: "r_306", to: "f3_c_bot", weight: 4 },
-  { id: "e41", from: "r_307", to: "f3_c_bot", weight: 4 },
-  { id: "e42", from: "r_308", to: "f3_c_bot", weight: 4 },
-  { id: "e43", from: "f3_c_top", to: "f3_c_mid", weight: 8 },
-  { id: "e44", from: "f3_c_mid", to: "f3_c_bot", weight: 8 },
-  { id: "e45", from: "f3_c_left", to: "f3_c_mid", weight: 10 },
-  { id: "e46", from: "f3_c_mid", to: "f3_c_right", weight: 10 },
-];
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
 
-function getLocalLocations() {
+function seedData() {
+  return buildReferenceBuildingData();
+}
+
+function readRaw() {
   try {
     const raw = localStorage.getItem(LOCAL_KEY);
-    if (!raw) {
-      const initial = { nodes: DEFAULT_NODES, edges: DEFAULT_EDGES };
-      localStorage.setItem(LOCAL_KEY, JSON.stringify(initial));
-      return initial;
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.nodes) || !Array.isArray(parsed.edges)) {
+      return null;
     }
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error("Location storage error:", err);
-    return { nodes: DEFAULT_NODES, edges: DEFAULT_EDGES };
+    return parsed;
+  } catch {
+    return null;
   }
 }
 
-function saveLocalLocations(data) {
+function writeRaw(data) {
   try {
     localStorage.setItem(LOCAL_KEY, JSON.stringify(data));
   } catch (err) {
     console.error("Location save error:", err);
   }
-}
-
-export async function getLocationGraph() {
-  return getLocalLocations();
-}
-
-export async function saveLocationGraph(data) {
-  saveLocalLocations(data);
   return data;
 }
 
+/**
+ * Load the editable location graph. Seeds from the reference building the
+ * first time, then always reflects admin edits.
+ */
+export async function getLocationGraph() {
+  const existing = readRaw();
+  if (existing) return existing;
+  return writeRaw(seedData());
+}
+
+export async function saveLocationGraph(data) {
+  return writeRaw(data);
+}
+
+/** Discard admin edits and restore the reference building. */
+export async function resetToReferenceBuilding() {
+  return writeRaw(seedData());
+}
+
+/* ──────────────────────────────────────────────
+   Node CRUD
+   ────────────────────────────────────────────── */
+
 export async function addLocationNode(node) {
-  const data = getLocalLocations();
-  const newNode = {
-    ...node,
-    id: node.id || `loc_${Date.now()}`,
-  };
+  const data = await getLocationGraph();
+  const newNode = { ...node, id: node.id || `loc_${Date.now()}` };
+  if (data.nodes.some((n) => n.id === newNode.id)) {
+    throw new Error(`A location with id "${newNode.id}" already exists.`);
+  }
   data.nodes.push(newNode);
-  saveLocalLocations(data);
+  writeRaw(data);
   return newNode;
 }
 
 export async function updateLocationNode(id, updates) {
-  const data = getLocalLocations();
-  const idx = data.nodes.findIndex((n) => n.id === id);
-  if (idx === -1) throw new Error("Node not found");
-  data.nodes[idx] = { ...data.nodes[idx], ...updates };
-  saveLocalLocations(data);
-  return data.nodes[idx];
+  const data = await getLocationGraph();
+  const index = data.nodes.findIndex((n) => n.id === id);
+  if (index === -1) throw new Error("Node not found");
+  data.nodes[index] = { ...data.nodes[index], ...updates, id };
+  writeRaw(data);
+  return data.nodes[index];
 }
 
 export async function deleteLocationNode(id) {
-  const data = getLocalLocations();
+  const data = await getLocationGraph();
   data.nodes = data.nodes.filter((n) => n.id !== id);
   data.edges = data.edges.filter((e) => e.from !== id && e.to !== id);
-  saveLocalLocations(data);
+  writeRaw(data);
   return true;
 }
 
+/* ──────────────────────────────────────────────
+   Edge CRUD
+   ────────────────────────────────────────────── */
+
 export async function addLocationEdge(edge) {
-  const data = getLocalLocations();
+  const data = await getLocationGraph();
+  const from = data.nodes.find((n) => n.id === edge.from);
+  const to = data.nodes.find((n) => n.id === edge.to);
+
+  if (!from || !to) throw new Error("Both locations must exist before linking them.");
+  if (edge.from === edge.to) throw new Error("A location cannot link to itself.");
+
+  const duplicate = data.edges.some(
+    (e) => (e.from === edge.from && e.to === edge.to) || (e.from === edge.to && e.to === edge.from)
+  );
+  if (duplicate) throw new Error("These locations are already linked.");
+
   const newEdge = {
-    ...edge,
     id: edge.id || `edge_${Date.now()}`,
+    from: edge.from,
+    to: edge.to,
+    weight: Number(edge.weight) || 5,
+    accessibility: edge.accessibility || "walk",
   };
   data.edges.push(newEdge);
-  saveLocalLocations(data);
+  writeRaw(data);
   return newEdge;
 }
 
 export async function deleteLocationEdge(id) {
-  const data = getLocalLocations();
+  const data = await getLocationGraph();
   data.edges = data.edges.filter((e) => e.id !== id);
-  saveLocalLocations(data);
+  writeRaw(data);
   return true;
+}
+
+/* ──────────────────────────────────────────────
+   Floor plans
+   ────────────────────────────────────────────── */
+
+/**
+ * Floor plan metadata. `image` is null until a real PNG/JPG is dropped in —
+ * callers should fall back to `file` (the vector blueprint) in that case.
+ */
+export async function getFloorPlans() {
+  return clone(FLOOR_PLANS);
+}
+
+export async function getFloorPlan(floor) {
+  return FLOOR_PLANS[floor] ?? null;
+}
+
+/** Best available artwork for a floor: real image if set, else vector plan. */
+export function resolveFloorPlanSource(floor) {
+  const plan = FLOOR_PLANS[floor];
+  if (!plan) return null;
+  return plan.image || plan.file;
+}
+
+/* ──────────────────────────────────────────────
+   Vertical connections (stairs / elevators)
+   ────────────────────────────────────────────── */
+
+/**
+ * Stair and elevator links that currently exist in the editable graph.
+ * Falls back to the declared reference connections when the graph has none,
+ * so the admin view is never empty.
+ */
+export async function getVerticalConnections() {
+  const data = await getLocationGraph();
+  const ids = new Set(data.nodes.map((n) => n.id));
+  const live = data.edges.filter(
+    (e) => e.accessibility === "stairs" || e.accessibility === "lift"
+  );
+
+  const rows = live.map((e) => {
+    const from = data.nodes.find((n) => n.id === e.from);
+    const to = data.nodes.find((n) => n.id === e.to);
+    return {
+      from: e.from,
+      to: e.to,
+      connection: e.accessibility === "lift" ? "elevator" : "stairs",
+      accessible: e.accessibility === "lift",
+      fromFloor: from?.floor ?? null,
+      toFloor: to?.floor ?? null,
+      live: true,
+    };
+  });
+
+  if (rows.length > 0) return rows;
+
+  return VERTICAL_CONNECTIONS.filter((v) => ids.has(v.from) && ids.has(v.to)).map((v) => {
+    const from = data.nodes.find((n) => n.id === v.from);
+    const to = data.nodes.find((n) => n.id === v.to);
+    return {
+      ...v,
+      fromFloor: from?.floor ?? null,
+      toFloor: to?.floor ?? null,
+      live: false,
+    };
+  });
+}
+
+/**
+ * Which floors can be reached from `floor` using only step-free circulation.
+ * Used by IndoorMap to warn when an accessible route is impossible.
+ */
+export async function getStepFreeFloors() {
+  const connections = await getVerticalConnections();
+  const data = await getLocationGraph();
+  const floorsOf = (nodeId) => data.nodes.find((n) => n.id === nodeId)?.floor;
+
+  const stepFree = connections.filter((c) => c.accessible);
+  if (stepFree.length === 0) return [1];
+
+  const reachable = new Set([1]);
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (const c of stepFree) {
+      const a = floorsOf(c.from);
+      const b = floorsOf(c.to);
+      if (a == null || b == null) continue;
+      if (reachable.has(a) && !reachable.has(b)) { reachable.add(b); changed = true; }
+      if (reachable.has(b) && !reachable.has(a)) { reachable.add(a); changed = true; }
+    }
+  }
+  return [...reachable].sort((x, y) => x - y);
+}
+
+/* ──────────────────────────────────────────────
+   CSV import helpers
+   ────────────────────────────────────────────── */
+
+/** Minimal RFC-4180 CSV parser (handles quoted fields and embedded commas). */
+export function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let field = "";
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+
+    if (inQuotes) {
+      if (char === '"') {
+        if (text[i + 1] === '"') { field += '"'; i += 1; }
+        else inQuotes = false;
+      } else {
+        field += char;
+      }
+      continue;
+    }
+
+    if (char === '"') { inQuotes = true; continue; }
+    if (char === ",") { row.push(field); field = ""; continue; }
+    if (char === "\r") continue;
+    if (char === "\n") { row.push(field); rows.push(row); row = []; field = ""; continue; }
+    field += char;
+  }
+
+  if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
+  return rows.filter((r) => r.some((cell) => cell.trim() !== ""));
+}
+
+/** Parse rooms.csv text into row objects keyed by header. */
+export function parseRoomsCsv(text) {
+  const rows = parseCsv(text);
+  if (rows.length < 2) return [];
+  const headers = rows[0].map((h) => h.trim());
+
+  return rows.slice(1).map((cells) => {
+    const record = {};
+    headers.forEach((header, i) => {
+      record[header] = (cells[i] ?? "").trim();
+    });
+    return record;
+  });
+}
+
+/** Fetch the shipped room list. Network-only; safe to call when offline. */
+export async function fetchRoomList() {
+  try {
+    const res = await fetch("/data/rooms.csv");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return parseRoomsCsv(await res.text());
+  } catch (err) {
+    console.warn("Could not load rooms.csv:", err.message);
+    return [];
+  }
+}
+
+/** Fetch the shipped vertical connection list. */
+export async function fetchVerticalConnectionCsv() {
+  try {
+    const res = await fetch("/data/vertical-connections.csv");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return parseRoomsCsv(await res.text());
+  } catch (err) {
+    console.warn("Could not load vertical-connections.csv:", err.message);
+    return [];
+  }
 }

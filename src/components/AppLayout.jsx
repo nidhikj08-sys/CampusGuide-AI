@@ -62,13 +62,6 @@ export default function AppLayout({ children, title, subtitle }) {
 
   const currentMobileTabs = mobileTabs[role] || mobileTabs.student;
 
-  // Display user role label
-  const roleDisplay = {
-    student: "Student",
-    faculty: "Faculty",
-    admin: "Administrator",
-  }[role] || "User";
-
   const displayName = profile?.name || (role === "faculty" ? "Dr. Sneha" : role === "student" ? "Manya" : "Admin");
 
   return (
@@ -154,7 +147,6 @@ export default function AppLayout({ children, title, subtitle }) {
               </div>
               <div className="admin-user-info">
                 <span className="user-name">{displayName}</span>
-                <span className="user-role">{roleDisplay}</span>
               </div>
             </Link>
           </div>

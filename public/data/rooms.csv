@@ -1,0 +1,31 @@
+room_id,label,floor,type,capacity,building,notes
+r_101,Room 101,1,classroom,60,Main Block,Northwest classroom
+r_102,Room 102,1,classroom,60,Main Block,North classroom
+r_103,Room 103,1,office,15,Main Block,Department office
+r_104,Room 104,1,lab,45,Main Block,Computer laboratory
+r_105,Room 105,1,classroom,60,Main Block,Southwest classroom
+r_106,Room 106,1,classroom,60,Main Block,South classroom
+r_107,Room 107,1,classroom,60,Main Block,Southeast classroom
+r_201,Room 201,2,classroom,60,Main Block,Northwest classroom
+r_202,Room 202,2,classroom,60,Main Block,North classroom
+r_203,Room 203,2,lab,40,Main Block,Electronics laboratory
+r_204,Room 204,2,classroom,60,Main Block,North classroom - CS base room
+r_205,Room 205,2,classroom,60,Main Block,Southwest classroom
+r_206,Room 206,2,classroom,60,Main Block,South classroom
+r_207,Room 207,2,seminar hall,120,Main Block,Seminar hall
+r_208,Room 208,2,staff room,30,Main Block,CSE staff room
+r_301,Room 301,3,classroom,60,Main Block,Northwest classroom
+r_302,Room 302,3,classroom,60,Main Block,North classroom
+r_303,Room 303,3,lab,40,Main Block,Networking laboratory
+r_304,Room 304,3,classroom,60,Main Block,North classroom
+r_305,Room 305,3,classroom,60,Main Block,Southwest classroom
+r_306,Room 306,3,classroom,60,Main Block,South classroom
+r_307,Room 307,3,classroom,60,Main Block,Southeast classroom
+r_308,Room 308,3,classroom,60,Main Block,Southeast classroom
+f1_entrance,Main Entrance,1,entrance,,Main Block,Ground floor entrance
+f1_stairs,Stairs F1,1,stairs,,Main Block,West stair core
+f1_elevator,Elevator F1,1,elevator,,Main Block,East lift core
+f2_stairs,Stairs F2,2,stairs,,Main Block,West stair core
+f2_elevator,Elevator F2,2,elevator,,Main Block,East lift core
+f3_stairs,Stairs F3,3,stairs,,Main Block,West stair core
+f3_elevator,Elevator F3,3,elevator,,Main Block,East lift core
