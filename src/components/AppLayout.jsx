@@ -38,29 +38,6 @@ export default function AppLayout({ children, title, subtitle }) {
 
   const navItems = navConfigs[role] || navConfigs.student;
 
-  // Mobile Bottom Nav items (4 primary tabs)
-  const mobileTabs = {
-    student: [
-      { label: "Dashboard", path: "/student", icon: "📊" },
-      { label: "Timetable", path: "/student/timetable", icon: "📅" },
-      { label: "Map", path: "/student/map", icon: "🗺️" },
-      { label: "Profile", path: "/profile", icon: "👤" },
-    ],
-    faculty: [
-      { label: "Dashboard", path: "/faculty", icon: "📊" },
-      { label: "Timetable", path: "/faculty/timetable", icon: "📅" },
-      { label: "Shift Req", path: "/faculty/request-change", icon: "🔄" },
-      { label: "Profile", path: "/profile", icon: "👤" },
-    ],
-    admin: [
-      { label: "Dashboard", path: "/admin", icon: "📊" },
-      { label: "Rooms", path: "/admin/classrooms", icon: "🏫" },
-      { label: "Map", path: "/student/map", icon: "🗺️" },
-      { label: "Profile", path: "/profile", icon: "👤" },
-    ],
-  };
-
-  const currentMobileTabs = mobileTabs[role] || mobileTabs.student;
 
   const displayName = profile?.name || (role === "faculty" ? "Dr. Sneha" : role === "student" ? "Manya" : "Admin");
 
@@ -161,26 +138,11 @@ export default function AppLayout({ children, title, subtitle }) {
 
 
         {/* Main Content */}
-        <main className="admin-content with-bottom-nav">
+        <main className="admin-content">
           {children}
         </main>
 
-        {/* Mobile Bottom Navigation (Android Native View Experience) */}
-        <nav className="mobile-bottom-nav">
-          {currentMobileTabs.map((tab, i) => {
-            const isActive = location.pathname === tab.path;
-            return (
-              <Link 
-                key={i} 
-                to={tab.path} 
-                className={`bottom-nav-item ${isActive ? "active" : ""}`}
-              >
-                <span className="bottom-nav-icon">{tab.icon}</span>
-                <span className="bottom-nav-label">{tab.label}</span>
-              </Link>
-            );
-          })}
-        </nav>
+
       </div>
     </div>
   );
