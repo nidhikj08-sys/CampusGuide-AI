@@ -206,17 +206,15 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   min-height: 64px;
   background: #ffffff;
   border-bottom: 1px solid #e2e8f0;
-  padding: 10px 32px;
+  padding: 10px 16px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
   position: sticky;
   top: 0;
   z-index: 50;
-  gap: 2px;
 }
 
-/* Row 1 wrapper: hamburger left + avatar right */
+/* Single row wrapper: hamburger left + title centre + avatar right */
 .header-top-row {
   display: flex;
   align-items: center;
@@ -224,9 +222,11 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   width: 100%;
 }
 
-/* Row 2: title + subtitle */
+/* Centre: title + subtitle (grows between hamburger and avatar) */
 .header-title-block {
-  padding-left: 2px;
+  flex: 1;
+  padding: 0 10px;
+  min-width: 0;
 }
 
 .header-left {
@@ -251,15 +251,21 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 
 .header-title {
   margin: 0;
-  font-size: 1.4rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-subtitle {
-  margin: 2px 0 0;
-  font-size: 0.85rem;
+  margin: 1px 0 0;
+  font-size: 0.78rem;
   color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-right {

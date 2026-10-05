@@ -96,7 +96,7 @@ export default function AppLayout({ children, title, subtitle }) {
       <div className="admin-main">
         {/* Header Bar */}
         <header className="admin-header">
-          {/* Row 1: hamburger (left) + avatar pill (right) */}
+          {/* Single row: hamburger (left) + title/subtitle (centre) + avatar (right) */}
           <div className="header-top-row">
             <div className="header-left">
               <button
@@ -112,6 +112,13 @@ export default function AppLayout({ children, title, subtitle }) {
               </button>
             </div>
 
+            {(title || subtitle) && (
+              <div className="header-title-block">
+                {title && <h1 className="header-title">{title}</h1>}
+                {subtitle && <p className="header-subtitle">{subtitle}</p>}
+              </div>
+            )}
+
             <div className="header-right">
               <Link to="/profile" className="admin-user-pill">
                 <div className="admin-avatar">
@@ -126,14 +133,6 @@ export default function AppLayout({ children, title, subtitle }) {
               </Link>
             </div>
           </div>
-
-          {/* Row 2: page title + subtitle */}
-          {(title || subtitle) && (
-            <div className="header-title-block">
-              {title && <h1 className="header-title">{title}</h1>}
-              {subtitle && <p className="header-subtitle">{subtitle}</p>}
-            </div>
-          )}
         </header>
 
 
