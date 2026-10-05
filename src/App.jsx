@@ -14,6 +14,8 @@ import ManageLocations from "./pages/ManageLocations";
 import ManageTimetable from "./pages/ManageTimetable";
 import Timetable from "./pages/Timetable";
 import IndoorMap from "./pages/IndoorMap";
+import BuildingMap from "./pages/BuildingMap";
+import FindClassroom from "./pages/FindClassroom";
 import RequestChange from "./pages/RequestChange";
 import Profile from "./pages/Profile";
 
@@ -31,9 +33,13 @@ export default function App() {
       {/* 2 & 3 & 4. Student Flow (Screens 2, 3, 4) */}
       <Route path="/student" element={<ProtectedRoute allow={["student"]}><StudentDashboard /></ProtectedRoute>} />
       <Route path="/student/timetable" element={<ProtectedRoute allow={["student", "faculty"]}><Timetable /></ProtectedRoute>} />
-      <Route path="/student/map" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><IndoorMap /></ProtectedRoute>} />
+       <Route path="/student/map" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><BuildingMap /></ProtectedRoute>} />
 
-      {/* 5 & 6. Faculty Flow (Screens 5, 6) */}
+       {/* Find Classroom */}
+       <Route path="/map" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><BuildingMap /></ProtectedRoute>} />
+       <Route path="/find-classroom" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><FindClassroom /></ProtectedRoute>} />
+
+       {/* 5 & 6. Faculty Flow (Screens 5, 6) */}
       <Route path="/faculty" element={<ProtectedRoute allow={["faculty"]}><FacultyDashboard /></ProtectedRoute>} />
       <Route path="/faculty/timetable" element={<ProtectedRoute allow={["faculty"]}><Timetable /></ProtectedRoute>} />
       <Route path="/faculty/request-change" element={<ProtectedRoute allow={["faculty"]}><RequestChange /></ProtectedRoute>} />

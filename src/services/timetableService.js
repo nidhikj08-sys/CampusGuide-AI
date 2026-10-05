@@ -460,7 +460,7 @@ export async function updateTimetableEntry(id, entry) {
     }
     let updated = null;
     const next = getLocalTimetable().map((r) => {
-      if (sameRowId(r.id, id)) return r;
+      if (!sameRowId(r.id, id)) return r;
       updated = { ...r, ...payload, updated_at: new Date().toISOString() };
       return updated;
     });

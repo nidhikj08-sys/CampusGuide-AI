@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import Map3D from "../components/Map3D";
+import { getCampusMapGraph } from "../services/navigationGraph";
+import { unitsToMeters } from "../config/buildingSpec";
 
 export default function IndoorMap() {
   const [searchParams] = useSearchParams();

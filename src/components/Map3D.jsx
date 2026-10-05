@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { Canvas, useLoader, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Html, useTexture } from "@react-three/drei";
 import * as THREE from "three";
+import React from "react";
 
 const GEOMETRY_URL = "/building-geometry.json";
 
@@ -14,8 +15,8 @@ async function loadGeometry() {
   return _geometryCache;
 }
 
-/** Move camera smoothly to the selected floor. */
-function CameraFocus({ activeFloor }) {
+/** Move camera smoothly to the selected floor, centered on the building. */
+function CameraFocus({ activeFloor, buildingCenter }) {
   const { camera } = useThree();
   const startPos = useRef(new THREE.Vector3());
   const targetVec = useRef(new THREE.Vector3(0, 1.8, 0));
@@ -25,11 +26,11 @@ function CameraFocus({ activeFloor }) {
   useEffect(() => {
     const floorIndex = Math.max(0, activeFloor - 1);
     const newY = -floorIndex * 3.6 + 1.8;
-    targetVec.current.set(0, newY, 0);
+    targetVec.current.set(buildingCenter.x, newY, buildingCenter.z);
     startPos.current.copy(camera.position);
     startTime.current = performance.now();
     isMoving.current = true;
-  }, [activeFloor]);
+  }, [activeFloor, buildingCenter]);
 
   useFrame(() => {
     if (!isMoving.current) return;
@@ -245,6 +246,26 @@ function ErrorDisplay({ message }) {
   );
 }
 
+/** Simple error boundary: catches render errors and shows them visibly. */
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error("3D map error:", error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return <ErrorDisplay message={this.state.error?.toString() || "unknown error"} />;
+    }
+    return this.props.children;
+  }
+}
+
 /** Interactive 3D campus map viewer. */
 export default function Map3D({ activeFloor, setFloorFocus, highlightedRoom, onRoomClick, routePath }) {
   const [geometry, setGeometry] = useState(null);
@@ -265,6 +286,11 @@ export default function Map3D({ activeFloor, setFloorFocus, highlightedRoom, onR
       }
     }
     return out;
+  }, [geometry]);
+
+  const buildingCenter = useMemo(() => {
+    const s = geometry?.building?.shellSize || { widthMeters: 37.33, depthMeters: 32 };
+    return { x: s.widthMeters / 2, z: s.depthMeters / 2 };
   }, [geometry]);
 
   if (loading) {
@@ -288,17 +314,19 @@ export default function Map3D({ activeFloor, setFloorFocus, highlightedRoom, onR
 
   return (
     <>
-      <Canvas shadows camera={{ position: [18, 16, 18], fov: 45 }} gl={{ preserveDrawingBuffer: true }}>
-        <CameraFocus activeFloor={activeFloor} />
-        <BuildingScene
-          geometry={geometry}
-          photoUrls={photoUrls}
-          highlightedRoom={highlightedRoom}
-          onRoomClick={onRoomClick}
-          routePath={routePath}
-        />
-        <OrbitControls makeDefault target={[0, 1.8, 0]} minDistance={8} maxDistance={50} />
-      </Canvas>
+      <ErrorBoundary>
+        <Canvas shadows camera={{ position: [18, 16, 18], fov: 45 }} gl={{ preserveDrawingBuffer: true }}>
+          <CameraFocus activeFloor={activeFloor} buildingCenter={buildingCenter} />
+          <BuildingScene
+            geometry={geometry}
+            photoUrls={photoUrls}
+            highlightedRoom={highlightedRoom}
+            onRoomClick={onRoomClick}
+            routePath={routePath}
+          />
+          <OrbitControls target={[buildingCenter.x, 1.8, buildingCenter.z]} minDistance={8} maxDistance={50} />
+        </Canvas>
+      </ErrorBoundary>
       <div style={{ position: "absolute", left: 12, bottom: 12, display: "flex", gap: 8 }}>
         {geometry.floors.map((f) => (
           <button
