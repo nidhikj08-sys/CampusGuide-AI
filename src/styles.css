@@ -208,10 +208,12 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   border-bottom: 1px solid #e2e8f0;
   padding: 10px 16px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   position: sticky;
   top: 0;
   z-index: 50;
+  gap: 4px;
 }
 
 /* Single row wrapper: hamburger left + title centre + avatar right */
@@ -222,11 +224,9 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
   width: 100%;
 }
 
-/* Centre: title + subtitle (grows between hamburger and avatar) */
+/* Row 2: title + subtitle — below the hamburger/avatar row */
 .header-title-block {
-  flex: 1;
-  padding: 0 10px;
-  min-width: 0;
+  padding-left: 4px;
 }
 
 .header-left {
@@ -251,21 +251,15 @@ ul { margin: 0; padding-left: 20px; line-height: 1.8; }
 
 .header-title {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: #0f172a;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .header-subtitle {
-  margin: 1px 0 0;
-  font-size: 0.78rem;
+  margin: 2px 0 0;
+  font-size: 0.82rem;
   color: #64748b;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .header-right {
