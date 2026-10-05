@@ -80,11 +80,21 @@ export async function markAllAsRead() {
  * @param {string|null} [opts.userId]  - null = broadcast to role
  */
 export async function postNotification({ title, message, type = "info", role = null, userId = null }) {
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("notifications")
-    .insert({ title, message, type, role, user_id: userId });
+    .insert({ title, message, type, role, user_id: userId })
+    .select();
 
-  if (error) throw error;
+  if (error) {
+    const hint =
+      error.message.includes("row-level security")
+        ? "\n\nRLS blocked the insert — check: the admin user must have a row in public.profiles with role = 'admin' (my_role() must return 'admin')."
+        : "";
+    console.error("postNotification error:", error, hint);
+    throw new Error(error.message + hint);
+  }
+
+  return data?.[0] ?? null;
 }
 
 // ─── RELATIVE TIME HELPER ─────────────────────────────────────────────────────

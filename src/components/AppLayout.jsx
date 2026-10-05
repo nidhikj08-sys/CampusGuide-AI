@@ -31,6 +31,7 @@ export default function AppLayout({ children, title, subtitle }) {
       { label: "Events", path: "/events", icon: "🎉" },
       { label: "AI Assistant", path: "/chat", icon: "🤖" },
       { label: "Profile", path: "/profile", icon: "👤" },
+      { label: "Settings", path: "/settings", icon: "⚙️" },
     ],
     faculty: [
       { label: "Dashboard", path: "/faculty", icon: "📊" },
@@ -42,6 +43,7 @@ export default function AppLayout({ children, title, subtitle }) {
       { label: "Request Change", path: "/faculty/request-change", icon: "🔄" },
       { label: "AI Assistant", path: "/chat", icon: "🤖" },
       { label: "Profile", path: "/profile", icon: "👤" },
+      { label: "Settings", path: "/settings", icon: "⚙️" },
     ],
     admin: [
       { label: "Dashboard", path: "/admin", icon: "📊" },
@@ -54,6 +56,7 @@ export default function AppLayout({ children, title, subtitle }) {
       { label: "Manage Events", path: "/admin/events", icon: "📅" },
       { label: "AI Assistant", path: "/chat", icon: "🤖" },
       { label: "Profile", path: "/profile", icon: "👤" },
+      { label: "Settings", path: "/settings", icon: "⚙️" },
     ],
   };
 

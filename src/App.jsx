@@ -24,6 +24,7 @@ import ManageNotifications from "./pages/ManageNotifications";
 import ManageEvents from "./pages/ManageEvents";
 import RequestChange from "./pages/RequestChange";
 import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 
 export default function App() {
   return (
@@ -65,6 +66,7 @@ export default function App() {
 
       {/* Shared Profile */}
       <Route path="/profile" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><Profile /></ProtectedRoute>} />
+      <Route path="/settings" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><Settings /></ProtectedRoute>} />
 
       {/* Shared AI Assistant */}
       <Route path="/chat" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><AIChat /></ProtectedRoute>} />
