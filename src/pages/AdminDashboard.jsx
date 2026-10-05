@@ -8,7 +8,8 @@ const QUICK_ACTIONS = [
   { label: "Add Room", desc: "Register new room, lab or office", icon: "plus", color: "icon-blue", href: "/admin/classrooms/new" },
   { label: "Users", desc: "Manage students, faculty & admins", icon: "users", color: "icon-green", href: "/admin/users" },
   { label: "Timetable", desc: "Create & manage class schedules", icon: "calendar", color: "icon-amber", href: "/admin/timetable" },
-  { label: "Notices", desc: "Post campus announcements", icon: "bell", color: "icon-purple", href: "/admin/notices" },
+  { label: "Notifications", desc: "Create & send notifications", icon: "bell", color: "icon-purple", href: "/admin/notifications" },
+  { label: "Events", desc: "Manage campus events", icon: "star", color: "icon-pink", href: "/admin/events" },
 ];
 
 const RECENT_CHANGES = [
