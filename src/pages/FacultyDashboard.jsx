@@ -94,7 +94,7 @@ export default function FacultyDashboard() {
             </div>
           </Link>
 
-          <Link to="/student/map?dest=r_204" className="portal-card card-green">
+          <Link to="/find-classroom?dest=r_204" className="portal-card card-green">
             <div className="portal-icon-box icon-green">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />

@@ -181,7 +181,7 @@ export default function Profile() {
 
   const handleNavigateToRoom = () => {
     const dest = profile?.classroom_id || profile?.cabin_id || "r_204";
-    navigate(`/student/map?dest=${dest}`);
+    navigate(`/find-classroom?dest=${dest}`);
   };
 
   const handleDownloadID = () => {

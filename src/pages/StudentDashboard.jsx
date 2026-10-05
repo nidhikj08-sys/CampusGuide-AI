@@ -94,7 +94,7 @@ export default function StudentDashboard() {
             </div>
           </Link>
 
-          <Link to="/student/map" className="portal-card card-green">
+          <Link to="/find-classroom" className="portal-card card-green">
             <div className="portal-icon-box icon-green">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
@@ -106,7 +106,7 @@ export default function StudentDashboard() {
             </div>
           </Link>
 
-          <Link to="/student/map" className="portal-card card-indigo">
+          <Link to="/map" className="portal-card card-indigo">
             <div className="portal-icon-box icon-indigo">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />

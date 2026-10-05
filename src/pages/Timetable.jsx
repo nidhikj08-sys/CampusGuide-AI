@@ -112,7 +112,7 @@ function CompleteTimetable({ rows }) {
                           </td>
                           <td style={{ textAlign: "right" }}>
                             <Link
-                              to={`/student/map?dest=r_${row.room}`}
+                              to={`/find-classroom?dest=r_${row.room}`}
                               className="btn-navigate-sm"
                             >
                               🧭 Navigate
@@ -358,7 +358,7 @@ function PerDayTimetable({ rows }) {
                         </td>
                         <td style={{ textAlign: "right" }}>
                           <Link
-                            to={`/student/map?dest=r_${row.room}`}
+                            to={`/find-classroom?dest=r_${row.room}`}
                             className="btn-navigate-sm"
                           >
                             🧭 Navigate
