@@ -16,6 +16,10 @@ import Timetable from "./pages/Timetable";
 import IndoorMap from "./pages/IndoorMap";
 import BuildingMap from "./pages/BuildingMap";
 import FindClassroom from "./pages/FindClassroom";
+import Notifications from "./pages/Notifications";
+import Events from "./pages/Events";
+import ManageNotifications from "./pages/ManageNotifications";
+import ManageEvents from "./pages/ManageEvents";
 import RequestChange from "./pages/RequestChange";
 import Profile from "./pages/Profile";
 
@@ -38,6 +42,8 @@ export default function App() {
        {/* Find Classroom */}
        <Route path="/map" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><BuildingMap /></ProtectedRoute>} />
        <Route path="/find-classroom" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><FindClassroom /></ProtectedRoute>} />
+       <Route path="/notifications" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><Notifications /></ProtectedRoute>} />
+       <Route path="/events" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><Events /></ProtectedRoute>} />
 
        {/* 5 & 6. Faculty Flow (Screens 5, 6) */}
       <Route path="/faculty" element={<ProtectedRoute allow={["faculty"]}><FacultyDashboard /></ProtectedRoute>} />
@@ -47,8 +53,10 @@ export default function App() {
       {/* 7 & 8. Admin Flow (Screens 7, 8) */}
       <Route path="/admin" element={<ProtectedRoute allow={["admin"]}><AdminDashboard /></ProtectedRoute>} />
       <Route path="/admin/classrooms" element={<ProtectedRoute allow={["admin"]}><ManageClassrooms /></ProtectedRoute>} />
-      <Route path="/admin/timetable" element={<ProtectedRoute allow={["admin"]}><ManageTimetable /></ProtectedRoute>} />
-      <Route path="/admin/locations" element={<ProtectedRoute allow={["admin"]}><ManageLocations /></ProtectedRoute>} />
+       <Route path="/admin/timetable" element={<ProtectedRoute allow={["admin"]}><ManageTimetable /></ProtectedRoute>} />
+       <Route path="/admin/notifications" element={<ProtectedRoute allow={["admin"]}><ManageNotifications /></ProtectedRoute>} />
+       <Route path="/admin/events" element={<ProtectedRoute allow={["admin"]}><ManageEvents /></ProtectedRoute>} />
+       <Route path="/admin/locations" element={<ProtectedRoute allow={["admin"]}><ManageLocations /></ProtectedRoute>} />
 
       {/* Shared Profile */}
       <Route path="/profile" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><Profile /></ProtectedRoute>} />

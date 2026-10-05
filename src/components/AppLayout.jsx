@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import InstallPwaPrompt from "./InstallPwaPrompt";
+import { getUnreadCount } from "../services/notificationService";
 
 export default function AppLayout({ children, title, subtitle }) {
   const { profile, logout } = useAuth();
@@ -10,32 +11,73 @@ export default function AppLayout({ children, title, subtitle }) {
 
   const role = profile?.role || "student";
 
-  // Navigation Links based on user role (matching Mockups 2, 5, 7, 8)
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    getUnreadCount().then((count) => { if (!cancelled) setUnreadCount(count || 0); });
+    return () => { cancelled = true; };
+  }, [location.pathname]);
+
+  // Navigation Links based on user role
   const navConfigs = {
     student: [
       { label: "Dashboard", path: "/student", icon: "📊" },
       { label: "Timetable", path: "/student/timetable", icon: "📅" },
-      { label: "Map & Navigation", path: "/map", icon: "🗺️" },
       { label: "Find Classroom", path: "/find-classroom", icon: "🔍" },
+      { label: "Map & Navigation", path: "/map", icon: "🗺️" },
+      { label: "Notifications", path: "/notifications", icon: "🔔" },
+      { label: "Events", path: "/events", icon: "🎉" },
       { label: "Profile", path: "/profile", icon: "👤" },
     ],
     faculty: [
       { label: "Dashboard", path: "/faculty", icon: "📊" },
       { label: "Timetable", path: "/faculty/timetable", icon: "📅" },
       { label: "Find Classroom", path: "/find-classroom", icon: "🔍" },
+      { label: "Map & Navigation", path: "/map", icon: "🗺️" },
+      { label: "Notifications", path: "/notifications", icon: "🔔" },
+      { label: "Events", path: "/events", icon: "🎉" },
       { label: "Request Change", path: "/faculty/request-change", icon: "🔄" },
       { label: "Profile", path: "/profile", icon: "👤" },
     ],
     admin: [
       { label: "Dashboard", path: "/admin", icon: "📊" },
-      { label: "Manage Classrooms", path: "/admin/classrooms", icon: "🏫" },
-      { label: "Map & Navigation", path: "/map", icon: "🗺️" },
+      { label: "Timetable", path: "/student/timetable", icon: "📅" },
       { label: "Find Classroom", path: "/find-classroom", icon: "🔍" },
+      { label: "Map & Navigation", path: "/map", icon: "🗺️" },
+      { label: "Notifications", path: "/notifications", icon: "🔔" },
+      { label: "Manage Notifications", path: "/admin/notifications", icon: "📢" },
+      { label: "Events", path: "/events", icon: "🎉" },
+      { label: "Manage Events", path: "/admin/events", icon: "📅" },
       { label: "Profile", path: "/profile", icon: "👤" },
     ],
   };
 
   const navItems = navConfigs[role] || navConfigs.student;
+
+  // Mobile Bottom Nav items (4 primary tabs, same paths as before)
+  const mobileTabs = {
+    student: [
+      { label: "Dashboard", path: "/student", icon: "📊" },
+      { label: "Timetable", path: "/student/timetable", icon: "📅" },
+      { label: "Navigation", path: "/student/map", icon: "🗺️" },
+      { label: "Profile", path: "/profile", icon: "👤" },
+    ],
+    faculty: [
+      { label: "Dashboard", path: "/faculty", icon: "📊" },
+      { label: "Timetable", path: "/faculty/timetable", icon: "📅" },
+      { label: "Navigation", path: "/student/map", icon: "🗺️" },
+      { label: "Profile", path: "/profile", icon: "👤" },
+    ],
+    admin: [
+      { label: "Dashboard", path: "/admin", icon: "📊" },
+      { label: "Timetable", path: "/student/timetable", icon: "📅" },
+      { label: "Navigation", path: "/student/map", icon: "🗺️" },
+      { label: "Profile", path: "/profile", icon: "👤" },
+    ],
+  };
+
+  const currentMobileTabs = mobileTabs[role] || mobileTabs.student;
 
 
   const displayName = profile?.name || (role === "faculty" ? "Dr. Sneha" : role === "student" ? "Manya" : "Admin");
@@ -64,6 +106,7 @@ export default function AppLayout({ children, title, subtitle }) {
         <nav className="sidebar-nav">
           {navItems.map((item, idx) => {
             const isActive = location.pathname === item.path;
+            const isNotifications = item.path === "/notifications";
             return (
               <Link
                 key={idx}
@@ -71,7 +114,12 @@ export default function AppLayout({ children, title, subtitle }) {
                 className={`sidebar-link ${isActive ? "active" : ""}`}
                 onClick={() => setSidebarOpen(false)}
               >
-                <span className="nav-icon">{item.icon}</span>
+                <span className="nav-icon">
+                  {item.icon}
+                  {isNotifications && unreadCount > 0 && (
+                    <span className="nav-badge">{unreadCount > 9 ? "9+" : unreadCount}</span>
+                  )}
+                </span>
                 <span className="nav-label">{item.label}</span>
               </Link>
             );
@@ -133,10 +181,26 @@ export default function AppLayout({ children, title, subtitle }) {
 
 
         {/* Main Content */}
-        <main className="admin-content">
+        <main className="admin-content with-bottom-nav">
           {children}
         </main>
 
+        {/* Mobile Bottom Navigation (4 tabs: Dashboard, Timetable, Navigation, Profile) */}
+        <nav className="mobile-bottom-nav">
+          {currentMobileTabs.map((tab, i) => {
+            const isActive = location.pathname === tab.path;
+            return (
+              <Link
+                key={i}
+                to={tab.path}
+                className={`bottom-nav-item ${isActive ? "active" : ""}`}
+              >
+                <span className="bottom-nav-icon">{tab.icon}</span>
+                <span className="bottom-nav-label">{tab.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
 
       </div>
     </div>
