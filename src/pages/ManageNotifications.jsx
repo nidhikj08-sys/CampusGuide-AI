@@ -24,12 +24,19 @@ export default function ManageNotifications() {
     e.preventDefault();
     setSaving(true);
     try {
+      const payload = {
+        title: form.title,
+        message: form.message,
+        type: form.type,
+        role: form.role,
+        userId: form.user_id || null,
+      };
       if (editingId) {
         const updated = items.find((n) => n.id === editingId);
-        const { data } = await postNotification({ ...updated, ...form });
+        const { data } = await postNotification({ ...updated, ...payload });
         setItems((prev) => prev.map((n) => (n.id === editingId ? data : n)));
       } else {
-        const data = await postNotification(form);
+        const data = await postNotification(payload);
         setItems((prev) => [data, ...prev]);
       }
       resetForm();
