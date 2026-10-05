@@ -213,6 +213,38 @@ function BuildingScene({ geometry, photoUrls, highlightedRoom, onRoomClick, rout
   );
 }
 
+/** Catch errors and show them visibly instead of a blank screen. */
+function ErrorDisplay({ message }) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: "rgba(255,255,255,0.98)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#dc2626",
+        padding: 24,
+        textAlign: "center",
+        zIndex: 100,
+      }}
+    >
+      <h3 style={{ marginBottom: 8 }}>3D view failed to load</h3>
+      <pre style={{ fontSize: 12, overflow: "auto", maxWidth: 600, whiteSpace: "pre-wrap", marginBottom: 16 }}>
+        {message}
+      </pre>
+      <button
+        onClick={() => window.location.reload()}
+        style={{ padding: "8px 16px", fontSize: 14, cursor: "pointer" }}
+      >
+        Reload page
+      </button>
+    </div>
+  );
+}
+
 /** Interactive 3D campus map viewer. */
 export default function Map3D({ activeFloor, setFloorFocus, highlightedRoom, onRoomClick, routePath }) {
   const [geometry, setGeometry] = useState(null);

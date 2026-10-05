@@ -133,6 +133,35 @@ function sameClass(row, cls) {
   );
 }
 
+/**
+ * DB rows carry bigint ids that may arrive as numbers or strings,
+ * while local rows are hand-numbered. Compare loosely so an edit is
+ * never treated as colliding with itself.
+ */
+function sameRowId(a, b) {
+  if (a === null || a === undefined || b === null || b === undefined) return false;
+  return String(a) === String(b);
+}
+
+/**
+ * Mirrors the uq_timetable_slot unique index so the local fallback
+ * cannot be used to sneak past the database constraint.
+ */
+function slotConflicts(entry, rows, ignoreId = null) {
+  return rows.some(
+    (r) =>
+      !sameRowId(r.id, ignoreId) &&
+      sameClass(r, {
+        year: Number(entry.year),
+        branch: String(entry.branch || "").trim().toUpperCase(),
+        section: String(entry.section || "").trim().toUpperCase(),
+        semester: Number(entry.semester),
+      }) &&
+      r.day === entry.day &&
+      toNum(r.period_number) === Number(entry.period_number),
+  );
+}
+
 const DAY_ORDER = TIMETABLE_DAYS.reduce((acc, d, i) => ({ ...acc, [d]: i }), {});
 
 function sortRows(rows) {
@@ -351,6 +380,26 @@ function serializeEntry(entry) {
   };
 }
 
+/**
+ * True for errors that mean "the database rejected this data" rather than
+ * "the database is not reachable / not deployed". These must surface to
+ * the admin instead of being swallowed into the local fallback, otherwise
+ * a duplicate or invalid slot would look like a successful save.
+ */
+function isDataRejection(err) {
+  return err?.code === "23505" || err?.code === "23514";
+}
+
+function rejectionMessage(err) {
+  if (err?.code === "23505") {
+    return "That period is already taken for this class on this day.";
+  }
+  if (err?.code === "23514") {
+    return "One of the values is out of range (check year, semester, period and times).";
+  }
+  return err?.message || "Failed to save timetable entry";
+}
+
 export async function addTimetableEntry(entry) {
   const payload = serializeEntry(entry);
 
@@ -364,8 +413,16 @@ export async function addTimetableEntry(entry) {
     saveLocalTimetable([...getLocalTimetable(), data]);
     return data;
   } catch (err) {
+    if (isDataRejection(err)) {
+      throw new Error(rejectionMessage(err));
+    }
     console.warn("Timetable insert failed, using local cache:", err.message);
     const local = getLocalTimetable();
+    if (slotConflicts(payload, local)) {
+      throw new Error(
+        "That period is already taken for this class on this day.",
+      );
+    }
     const row = {
       ...payload,
       id: local.length > 0 ? Math.max(...local.map((r) => Number(r.id) || 0)) + 1 : 1,
@@ -388,13 +445,22 @@ export async function updateTimetableEntry(id, entry) {
       .select()
       .single();
     if (error) throw error;
-    saveLocalTimetable(getLocalTimetable().map((r) => (r.id === id ? data : r)));
+    saveLocalTimetable(getLocalTimetable().map((r) => (sameRowId(r.id, id) ? data : r)));
     return data;
   } catch (err) {
+    if (isDataRejection(err)) {
+      throw new Error(rejectionMessage(err));
+    }
     console.warn("Timetable update failed, using local cache:", err.message);
+    const local = getLocalTimetable();
+    if (slotConflicts(payload, local, id)) {
+      throw new Error(
+        "That period is already taken for this class on this day.",
+      );
+    }
     let updated = null;
     const next = getLocalTimetable().map((r) => {
-      if (r.id !== id) return r;
+      if (sameRowId(r.id, id)) return r;
       updated = { ...r, ...payload, updated_at: new Date().toISOString() };
       return updated;
     });
@@ -410,7 +476,7 @@ export async function deleteTimetableEntry(id) {
   } catch (err) {
     console.warn("Timetable delete failed, also removing local copy:", err.message);
   }
-  saveLocalTimetable(getLocalTimetable().filter((r) => r.id !== id));
+  saveLocalTimetable(getLocalTimetable().filter((r) => !sameRowId(r.id, id)));
   return true;
 }
 
