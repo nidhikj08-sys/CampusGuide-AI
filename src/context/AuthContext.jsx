@@ -111,12 +111,13 @@ export function AuthProvider({ children }) {
         usn: "4KV24CS083", 
         year: "3rd Year", 
         section: "B",
+        branch: "CSE",
+        semester: "5th",
         department: "B.E. Computer Science & Engineering",
         classroom: "Room 204 - CS Block",
         classroom_id: "r_204",
         blood_group: "O+",
         emergency_contact: "+91 9876543210",
-        semester: "5th",
         cgpa: "9.15",
         credits: "120/180",
         valid_thru: "July 2026",
@@ -187,7 +188,7 @@ export function AuthProvider({ children }) {
       return;
     }
 
-    const DB_COLUMNS = ["name", "usn", "year", "section", "employee_id", "department"];
+    const DB_COLUMNS = ["name", "usn", "year", "section", "branch", "semester", "employee_id", "department"];
     const dbUpdates = {};
     Object.keys(updates).forEach((key) => {
       if (DB_COLUMNS.includes(key)) {

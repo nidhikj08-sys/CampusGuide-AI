@@ -75,6 +75,7 @@ const BASE_FIELDS = {
     { key: "email", label: "Email", type: "email", required: true, disabled: true },
     { key: "usn", label: "USN / Student ID", type: "text", required: true },
     { key: "department", label: "Branch / Program", type: "text", placeholder: "e.g. B.E. Computer Science" },
+    { key: "branch", label: "Branch Code", type: "select", options: ["CSE", "ECE", "MECH", "CIVIL", "ISE", "MATHS"] },
     { key: "year", label: "Year", type: "select", options: ["1st Year", "2nd Year", "3rd Year", "4th Year"] },
     { key: "section", label: "Section", type: "select", options: ["A", "B", "C", "D"] },
     ...STUDENT_EXTRA_FIELDS,
