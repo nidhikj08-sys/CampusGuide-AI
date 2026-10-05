@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
+const Map3D = lazy(() => import("../components/Map3D"));
 import { getCampusMapGraph } from "../services/navigationGraph";
 import { recordScan } from "../services/scanLogService";
 import { unitsToMeters } from "../config/buildingSpec";
@@ -21,6 +22,9 @@ export default function IndoorMap() {
   const [showScanner, setShowScanner] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [cameraError, setCameraError] = useState("");
+  const [show3D, setShow3D] = useState(false);
+  const [highlightedRoom, setHighlightedRoom] = useState(null);
+  const [floorFocus, setFloorFocus] = useState(1);
   const videoRef = useRef(null);
   const streamRef = useRef(null);
 
@@ -348,7 +352,26 @@ export default function IndoorMap() {
             </div>
           </div>
 
-          <div className="map-canvas-wrapper">
+          <div style={{ position: "absolute", right: 12, top: 10, zIndex: 10 }}>
+            <button
+              onClick={() => setShow3D((v) => !v)}
+              style={{
+                background: show3D ? "#2563eb" : "rgba(255,255,255,0.85)",
+                color: show3D ? "#fff" : "#334155",
+                border: "none",
+                borderRadius: 6,
+                padding: "6px 12px",
+                fontSize: 12,
+                fontWeight: 600,
+                cursor: "pointer",
+                boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+              }}
+            >
+              {show3D ? "2D view" : "3D view"}
+            </button>
+          </div>
+
+          <div className={`map-canvas-wrapper${show3D ? " hidden" : ""}`}>
             <svg
               viewBox="0 0 540 440"
               className="indoor-svg-blueprint"
@@ -436,6 +459,48 @@ export default function IndoorMap() {
             </svg>
           </div>
         </div>
+
+        {/* 3D building view */}
+        {show3D && (
+          <div style={{ position: "absolute", inset: 0, zIndex: 5 }}>
+            <Suspense
+              fallback={
+                <div style={{ position: "absolute", inset: 0, background: "#f8fafc", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 10 }}>
+                  <div className="loading-state">
+                    <div className="spinner" />
+                    <p className="muted">Loading 3D map…</p>
+                  </div>
+                </div>
+              }
+            >
+              <Map3D
+                activeFloor={floorFocus}
+                setFloorFocus={setFloorFocus}
+                highlightedRoom={highlightedRoom}
+                onRoomClick={setHighlightedRoom}
+                routePath={routePath}
+              />
+            </Suspense>
+            <button
+              onClick={() => setShow3D(false)}
+              style={{
+                position: "absolute",
+                right: 12,
+                top: 12,
+                background: "#ef4444",
+                color: "#fff",
+                border: "none",
+                borderRadius: 6,
+                padding: "8px 16px",
+                fontWeight: 600,
+                cursor: "pointer",
+                zIndex: 20,
+              }}
+            >
+              Close 3D
+            </button>
+          </div>
+        )}
 
         {/* QR Scanner Modal */}
         {showScanner && (

@@ -7,9 +7,13 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "build:geometry": "node scripts/build-building-geometry.mjs",
+    "build:placeholders": "node scripts/build-placeholders.mjs",
     "verify:building": "node scripts/verifyBuilding.mjs"
   },
   "dependencies": {
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
     "@supabase/supabase-js": "^2.45.0",
     "@types/leaflet": "^1.9.22",
     "@zxing/browser": "^0.1.5",
@@ -18,7 +22,8 @@
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.18.4"
+    "react-router-dom": "^7.18.4",
+    "three": "^0.186.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.7.0",

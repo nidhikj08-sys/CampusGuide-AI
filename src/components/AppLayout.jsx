@@ -15,23 +15,22 @@ export default function AppLayout({ children, title, subtitle }) {
     student: [
       { label: "Dashboard", path: "/student", icon: "📊" },
       { label: "Timetable", path: "/student/timetable", icon: "📅" },
-      { label: "Find Classroom", path: "/student/map", icon: "🔍" },
-      { label: "Map & Navigation", path: "/student/map", icon: "🗺️" },
+      { label: "Map & Navigation", path: "/map", icon: "🗺️" },
+      { label: "Find Classroom", path: "/find-classroom", icon: "🔍" },
       { label: "Profile", path: "/profile", icon: "👤" },
     ],
     faculty: [
       { label: "Dashboard", path: "/faculty", icon: "📊" },
       { label: "Timetable", path: "/faculty/timetable", icon: "📅" },
-      { label: "My Classroom", path: "/student/map?dest=r_204", icon: "🏫" },
+      { label: "Find Classroom", path: "/find-classroom", icon: "🔍" },
       { label: "Request Change", path: "/faculty/request-change", icon: "🔄" },
       { label: "Profile", path: "/profile", icon: "👤" },
     ],
     admin: [
       { label: "Dashboard", path: "/admin", icon: "📊" },
       { label: "Manage Classrooms", path: "/admin/classrooms", icon: "🏫" },
-      { label: "Manage Faculty", path: "/admin/faculty", icon: "👨‍🏫" },
-      { label: "Manage Students", path: "/admin/students", icon: "👥" },
-      { label: "Create Timetable", path: "/admin/timetable", icon: "📅" },
+      { label: "Map & Navigation", path: "/map", icon: "🗺️" },
+      { label: "Find Classroom", path: "/find-classroom", icon: "🔍" },
       { label: "Profile", path: "/profile", icon: "👤" },
     ],
   };
