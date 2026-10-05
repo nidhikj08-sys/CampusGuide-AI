@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import AppLayout from "../components/AppLayout";
 import { useAuth } from "../context/AuthContext";
-import { getStudentClasses } from "../services/timetableService";
 import {
   getNotifications,
   getUnreadCount,
@@ -15,8 +14,7 @@ import {
 export default function StudentDashboard() {
   const { profile } = useAuth();
   const studentName = profile?.name || "Manya";
-  const todayClasses = getStudentClasses().slice(0, 3);
-  const [activeTab, setActiveTab] = useState("cards"); // "cards" | "schedule" | "notifications"
+  const [activeTab, setActiveTab] = useState("cards"); // "cards" | "notifications"
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifLoading, setNotifLoading] = useState(false);
@@ -58,15 +56,15 @@ export default function StudentDashboard() {
         <p className="greeting-sub">Here's your today's overview.</p>
       </div>
 
-      {/* Tab Bar */}
+      {/* Tab Bar: Quick Cards & Notifications only */}
       <div className="student-tab-bar">
-        {["cards", "schedule", "notifications"].map((tab) => (
+        {["cards", "notifications"].map((tab) => (
           <button
             key={tab}
             className={`student-tab-btn${activeTab === tab ? " active" : ""}`}
             onClick={() => setActiveTab(tab)}
           >
-            {tab === "cards" ? "Quick Cards" : tab === "schedule" ? "Timetable" : (
+            {tab === "cards" ? "Quick Cards" : (
               <span style={{ position: "relative", display: "inline-flex", alignItems: "center", gap: "6px" }}>
                 Notifications
                 {unreadCount > 0 && (
@@ -133,40 +131,6 @@ export default function StudentDashboard() {
               <span className="card-link-text">View / edit details ›</span>
             </div>
           </Link>
-        </div>
-      )}
-
-      {/* ── SCHEDULE LIST ── */}
-      {activeTab === "schedule" && (
-        <div className="schedule-panel">
-          <div className="schedule-header">
-            <h2>Today's Classes</h2>
-            <Link to="/student/timetable" className="view-all-text">View All</Link>
-          </div>
-
-          <div className="class-schedule-list">
-            {todayClasses.map((item) => (
-              <div key={item.id} className="class-schedule-item">
-                <div className="schedule-time-col">
-                  <span className={`status-dot dot-${item.dot}`} />
-                  <span className="time-text">{item.time}</span>
-                </div>
-                <div className="schedule-subject-col">
-                  <span className="subject-title">{item.subject}</span>
-                </div>
-                <div className="schedule-room-col">
-                  <Link 
-                    to={`/student/map?dest=r_${item.room}`} 
-                    className="room-tag-link"
-                    title="Navigate to this room"
-                  >
-                    Room {item.room}
-                    <span className="nav-arrow">↗</span>
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       )}
 
