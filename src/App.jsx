@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Login from "./pages/Login";
+import Entry from "./pages/Entry";
+import Login from "./pages/LoginScreen";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
@@ -13,6 +14,7 @@ import ManageClassrooms from "./pages/ManageClassrooms";
 import ManageLocations from "./pages/ManageLocations";
 import ManageTimetable from "./pages/ManageTimetable";
 import Timetable from "./pages/Timetable";
+import AIChat from "./pages/AIChat";
 import IndoorMap from "./pages/IndoorMap";
 import BuildingMap from "./pages/BuildingMap";
 import FindClassroom from "./pages/FindClassroom";
@@ -26,6 +28,9 @@ import Profile from "./pages/Profile";
 export default function App() {
   return (
     <Routes>
+      {/* First-launch flow */}
+      <Route path="/" element={<Entry />} />
+
       {/* Auth routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
@@ -60,6 +65,9 @@ export default function App() {
 
       {/* Shared Profile */}
       <Route path="/profile" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><Profile /></ProtectedRoute>} />
+
+      {/* Shared AI Assistant */}
+      <Route path="/chat" element={<ProtectedRoute allow={["student", "faculty", "admin"]}><AIChat /></ProtectedRoute>} />
 
       {/* Fallback */}
       <Route path="*" element={<Navigate to="/login" replace />} />

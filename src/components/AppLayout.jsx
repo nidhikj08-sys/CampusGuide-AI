@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import InstallPwaPrompt from "./InstallPwaPrompt";
+import ChatWidget from "./ChatWidget";
 import { getUnreadCount } from "../services/notificationService";
 
 export default function AppLayout({ children, title, subtitle }) {
@@ -28,6 +29,7 @@ export default function AppLayout({ children, title, subtitle }) {
       { label: "Map & Navigation", path: "/map", icon: "🗺️" },
       { label: "Notifications", path: "/notifications", icon: "🔔" },
       { label: "Events", path: "/events", icon: "🎉" },
+      { label: "AI Assistant", path: "/chat", icon: "🤖" },
       { label: "Profile", path: "/profile", icon: "👤" },
     ],
     faculty: [
@@ -38,6 +40,7 @@ export default function AppLayout({ children, title, subtitle }) {
       { label: "Notifications", path: "/notifications", icon: "🔔" },
       { label: "Events", path: "/events", icon: "🎉" },
       { label: "Request Change", path: "/faculty/request-change", icon: "🔄" },
+      { label: "AI Assistant", path: "/chat", icon: "🤖" },
       { label: "Profile", path: "/profile", icon: "👤" },
     ],
     admin: [
@@ -49,6 +52,7 @@ export default function AppLayout({ children, title, subtitle }) {
       { label: "Manage Notifications", path: "/admin/notifications", icon: "📢" },
       { label: "Events", path: "/events", icon: "🎉" },
       { label: "Manage Events", path: "/admin/events", icon: "📅" },
+      { label: "AI Assistant", path: "/chat", icon: "🤖" },
       { label: "Profile", path: "/profile", icon: "👤" },
     ],
   };
@@ -201,6 +205,9 @@ export default function AppLayout({ children, title, subtitle }) {
             );
           })}
         </nav>
+
+        {/* Floating AI Assistant (available on every screen except the dedicated chat page) */}
+        {location.pathname !== "/chat" && <ChatWidget />}
 
       </div>
     </div>
